@@ -117,6 +117,8 @@ var nameScale = d3.scaleBand().range([0, height]);
 var nameValue = function(d) { return nameScale(nameCalc(d)); };
 var nameAxis = d3.axisLeft(nameScale);
 
+//hey
+
 var area = d3.area()
              .x(xValue)
              .y1(yValue);
@@ -129,7 +131,7 @@ var bisectDate = d3.bisector(function(d) { return d}).left;
 
 var rowConverter = function(d) {
     return {
-        name: d.name,
+        name: d.names,
         date: parseTime(d.date),
         mentions: +d.sentences
     };
