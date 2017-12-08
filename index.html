@@ -184,7 +184,7 @@ d3.csv('mediacloud-sentence-counts.csv', rowConverter, function(error, dataset) 
     var lowerMeanScale = d3.scaleLinear()
                            .domain([0, mean_threshold])
                            .interpolate(d3.interpolateHcl)
-                           .range([d3.rgb('#deebf7'), d3.rgb('#3182bd')]);
+                           .range([d3.rgb('#3182bd'), d3.rgb('#deebf7')]);
 
     var upperMeanScale = d3.scaleLinear()
                            .domain([mean_threshold, max_mean])
