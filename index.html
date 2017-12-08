@@ -20,7 +20,8 @@ svg {
 }
 
 .axis--x line {
-    stroke: #aaa;
+    stroke: #777;
+    stroke-width: .1;
 }
 
 .axis--name .tick line {
@@ -37,22 +38,18 @@ svg {
 }
 
 .line {
-    fill: none;
-    stroke: #448cab;
+    fill: none;;
 }
 
 .name:nth-child(odd) .line{
     fill: none;
-    stroke: #5ca3c1;
 }
 
 .area {
-    fill: #448cab;
     opacity:.6;
 }
 
 .name:nth-child(odd) .area {
-    fill: #5ca3c1;
     opacity:.6;
 }
 .overlay {
@@ -87,6 +84,7 @@ svg {
 <body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
+//good colors - #448cab and #5ca3c1
 
 var margin = { top: 30, right: 200, bottom: 100, left: 300 },
     width = 1000 - margin.left - margin.right,
@@ -116,6 +114,11 @@ var nameCalc = function(d) { return d.key; };
 var nameScale = d3.scaleBand().range([0, height]);
 var nameValue = function(d) { return nameScale(nameCalc(d)); };
 var nameAxis = d3.axisLeft(nameScale);
+
+var colors = ["rgb(75,0,130)","rgb(138,43,226","rgb(147,112,219)","rgb(218,112,214)","rgb(221,160,221)",
+              "rgb(216,191,216)","rgb(255,228,225)","rgb(255,160,122)","rgb(240,128,128)",
+              "rgb(255,99,71)","rgb(220,20,60)","rgb(139,0,0)"];
+var meanCalc = function(d) {return d.mean; };
 
 //hey
 
@@ -147,21 +150,46 @@ d3.csv('mediacloud-sentence-counts.csv', rowConverter, function(error, dataset) 
         .key(function(d) { return d.name; })
         .entries(dataset);
 
-    /*
-    function peakTime(d) {
-        var i = d3.scan(d.values, function(a, b) { return y(b) - y(a); });
-        return d.values[i].date;
+    function findPeakTime(d) {
+        for (i in d) {
+          var topic_values = d[i].values;
+          var max_index = d3.scan(topic_values, function(a, b) {return y(b) - y(a)});
+          var peakTime = x(topic_values[max_index]);
+          d[i].peakTime = peakTime;
+        }
     };
+    findPeakTime(data);
 
-    data.sort(function(a, b) { return peakTime(b) - peakTime(a); });
-    */
+    data.sort(function(a, b) { return a.peakTime - b.peakTime;});
+
+    function findAverageMentions(d) {
+        for (i in d) {
+          var topic_values = d[i].values;
+          var mean = d3.mean(topic_values, function(a) {return y(a)});
+          d[i].mean = mean;
+        }
+    }
+    findAverageMentions(data);
+
 
     //var max_mentions = d3.max(dataset, function(d) {return d.mentions;});
     //var yAxis = d3.axisLeft(yScale).tickValues([max_mentions / 3, max_mentions * (2 / 3), max_mentions]);
 
     xScale.domain(d3.extent(dataset, x));
-
     nameScale.domain(data.map(function(d) { return d.key; }));
+
+    max_mean = d3.max(data, function(d) {return d.mean});
+    mean_threshold = max_mean / 2
+    //rethink whether domain should start at 0 below
+    var lowerMeanScale = d3.scaleLinear()
+                           .domain([0, mean_threshold])
+                           .interpolate(d3.interpolateHcl)
+                           .range([d3.rgb('#3182bd'), d3.rgb('#deebf7')]);
+
+    var upperMeanScale = d3.scaleLinear()
+                           .domain([mean_threshold, max_mean])
+                           .interpolate(d3.interpolateHcl)
+                           .range([d3.rgb('#fee6ce'), d3.rgb('#e6550d')]);
 
     var areaChartHeight = (1 + overlap) * (height / nameScale.domain().length);
 
@@ -170,21 +198,11 @@ d3.csv('mediacloud-sentence-counts.csv', rowConverter, function(error, dataset) 
           })])
           .range([areaChartHeight, 0]);
 
-
     area.y0(yScale(0));
 
     var xAxisTransform = height + (overlap * (height / nameScale.domain().length));
+    var xAxis2Transform = height / nameScale.domain().length;
     var yAxisTransform = overlap * (height / nameScale.domain().length);
-
-    svg.append('g')
-       .attr('class', 'axis axis--x')
-       .attr('transform', 'translate(0,' + xAxisTransform + ')')
-       .call(xAxis);
-
-    svg.append('g')
-       .attr('class', 'axis axis--name')
-       .attr('transform', 'translate(0,' + yAxisTransform + ')')
-       .call(nameAxis);
 
     var gName = svg.append('g')
             .attr('class', 'names')
@@ -205,12 +223,28 @@ d3.csv('mediacloud-sentence-counts.csv', rowConverter, function(error, dataset) 
     gName.append('path')
         .attr('class', 'area')
         .datum(function(d) { return d.values; })
-        .attr('d', area);
+        .attr('d', area)
+        .style('fill', function(d) {
+           var mean = d3.mean(d, function(a) {return y(a)});
+           if (mean < mean_threshold) {
+             return lowerMeanScale(mean);
+           } else {
+             return upperMeanScale(mean);
+           }
+        });
 
     gName.append('path')
         .attr('class', 'line')
         .datum(function(d) { return d.values; })
-        .attr('d', line);
+        .attr('d', line)
+        .style('stroke', function(d) {
+           var mean = d3.mean(d, function(a) {return y(a)});
+           if (mean < mean_threshold) {
+             return lowerMeanScale(mean);
+           } else {
+             return upperMeanScale(mean);
+           }
+        });
 
     var focus = gName.append("g")
         .attr("class", "focus")
@@ -352,6 +386,21 @@ d3.csv('mediacloud-sentence-counts.csv', rowConverter, function(error, dataset) 
       var textXValuesArray = [mentionsXValue, dateXValue];
       return textXValuesArray;
     }
+
+    svg.append('g')
+       .attr('class', 'axis axis--x')
+       .attr('transform', 'translate(0,' + xAxisTransform + ')')
+       .call(xAxis);
+
+    svg.append('g')
+       .attr('class', 'axis axis--x2')
+       .attr('transform', 'translate(0,' + xAxis2Transform + ')')
+       .call(xAxis);
+
+    svg.append('g')
+       .attr('class', 'axis axis--name')
+       .attr('transform', 'translate(0,' + yAxisTransform + ')')
+       .call(nameAxis);
 
 
 });
