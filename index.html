@@ -11,6 +11,12 @@ svg {
     font-weight: 300;
 }
 
+.step-container {
+  float:left;
+  width:1px;
+  position:relative;
+}
+
 .axis .domain {
     display: none;
 }
@@ -106,10 +112,12 @@ svg {
 </style>
 </head>
 <body>
-  <span class="change-data-button">hey<span>
-  <div class="joyplot-container"></div>
+  <span class="change-data-button">Change Data</span>
+  <div class="step-container"></div>
+  <div class="joyplot-container" style="float:right"></div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="d3-annotation.min.js"></script>
+<script src='https://unpkg.com/scrollama'></script>
 <script>
 //good colors - #448cab and #5ca3c1
 
@@ -127,6 +135,11 @@ var svg = d3.select('.joyplot-container')
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+d3.select('.step-container')
+  .style('height', function() {
+    return height + margin.top + margin.bottom + "px";
+  });
 
 var x = function(d) { return d.date; };
 var xScale = d3.scaleTime().range([0, width]);
@@ -211,6 +224,24 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function(error, dataset) 
     //height / nameScale.domain().length;
     var yAxisTransform = overlap * (height / nameScale.domain().length);
 
+    var number_of_steps = data.length;
+    var counter = 0;
+    while (counter < number_of_steps) {
+      d3.select('.step-container')
+        .append('div')
+        .style('position', 'absolute')
+        .attr('class', 'step')
+        .style('width', '1px')
+        .style('top', function() {
+          return nameScale.bandwidth() * counter + "px";
+        })
+        .style('height', function() {
+          return nameScale.bandwidth() + "px";
+        });
+
+      counter++;
+    }
+
     var gName = svg.append('g')
             .attr('class', 'names')
             .selectAll('.name')
@@ -232,6 +263,20 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function(error, dataset) 
         .attr('class', 'line')
         .datum(function(d) { return d.values; })
         .attr('d', line);
+
+    gName.append('rect')
+         .attr('class', 'step')
+         .attr('data-step', function(d, i) {
+           return i;
+         })
+         .attr('width', '100%')
+         .attr('height', function() {
+           return nameScale.bandwidth();
+         })
+         .attr('y', function() {
+           return nameScale.bandwidth() * overlap;
+         })
+         .attr('visibility', 'hidden');
 
     var mouseover = function(index) {
       var name, peakTime, peakMentions;
@@ -277,6 +322,110 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function(error, dataset) 
         .call(makeAnnotations);
 
     }
+
+    function handleStepEnter(response) {
+
+      console.log('hey');
+
+      d3.selectAll(".annotation-group").remove();
+
+      d3.select("g.axis--name")
+        .selectAll("g.tick")
+        .attr("opacity", "1");
+
+      d3.select("g.names")
+        .selectAll("g")
+        .attr("opacity", "1");
+
+      var index, name, peakTime, peakMentions;
+      index = response.index;
+      name = data[index].key;
+      peakTime = data[index].peakTime;
+      peakMentions = data[index].peakMentions;
+
+      const type = d3.annotationCallout;
+
+      const annotations = [{
+        note: {
+          label: "during the week of " + timeFormat(peakTime),
+          title: "Index of " + peakMentions
+        },
+        //can use x, y directly instead of data
+        data: { date: peakTime, mentions: peakMentions},
+        dy: -25,
+        dx: 25
+      }];
+
+      const makeAnnotations = d3.annotation()
+        .type(type)
+        //accessors & accessorsInverse not needed
+        //if using x, y in annotations JSON
+        .accessors({
+          x: d => xScale(d.date),
+          y: d => yScale(d.mentions)
+        })
+        .accessorsInverse({
+           date: d => xScale.invert(d.x),
+           close: d => yScale.invert(d.y)
+        })
+        .annotations(annotations);
+
+      var nameNoSpace = cleanString(name);
+
+      d3.select("g.names")
+        .selectAll("g")
+        .attr("opacity", ".1")
+        .filter(function() {
+           var className = "name--" + nameNoSpace;
+           if (d3.select(this).attr("class") == className) {
+              return true;
+           } else {
+              return false;
+           }
+         })
+         .attr("opacity", "1")
+
+       d3.select("g.axis--name")
+         .selectAll("g.tick")
+         .attr("opacity", "1")
+         .filter(function() {
+            if (d3.select(this).text() == name) {
+               return false;
+            } else {
+               return true;
+            }
+          })
+          .attr("opacity", ".1");
+
+        d3.select("g.name--" + nameNoSpace)
+          .append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations);
+
+    }
+
+    function handleStepExit(response) {
+      console.log('leaving!');
+    }
+
+    function init() {
+      // instantiate the scrollama
+      var scroller = scrollama();
+
+      // setup the instance, pass callback functions
+      scroller
+        .setup({
+          container:'.step-container',
+          step: '.step', // required
+          offset: 0.5, // optional, default = 0.5
+          debug: false // optional, default = false
+
+        })
+        .onStepEnter(handleStepEnter)
+        .onStepExit(handleStepExit);
+    }
+
+    init();
 
     svg.append('g')
        .attr('class', 'axis axis--x')
