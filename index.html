@@ -373,11 +373,11 @@
 						return height + margin.top + margin.bottom + "px";
 					})
 					.style('top', function() {
-						return margin.top - (nameScale.bandwidth() * 3) + "px";
+						return margin.top - nameScale.bandwidth() + "px";
 					});
 
 
-		    var number_of_steps = data.length + 3;
+		    var number_of_steps = data.length;
 		    var counter = 0;
 		    while (counter < number_of_steps) {
 		      d3.select('.scroll__text')
@@ -437,11 +437,7 @@
 
 		      var index, direction, name, peakTime, peakMentions;
 		      direction = response.direction;
-					if (direction == "down") {
-						index = response.index + 2;
-					} else {
-						index = response.index - 4;
-					}
+					index = response.index;
 
 		      name = data[index].key;
 		      peakTime = data[index].peakTime;
@@ -549,7 +545,7 @@
 						text: '.scroll__text',
 						step: '.scroll__text .step',
 						debug: false,
-						offset: 0.5,
+						offset: 0.85,
 					})
 						.onStepEnter(handleStepEnter)
 						.onContainerEnter(handleContainerEnter)
