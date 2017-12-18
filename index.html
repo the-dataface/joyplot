@@ -1,548 +1,650 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<link href="https://fonts.googleapis.com/css?family=Mada:300,500,700" rel="stylesheet">
-<style>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>2017 Memes: A Year in Review</title>
+	<meta name="description" content="Scrollama Demo: Fixed JS">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Mada:300,500,700" rel="stylesheet">
+	<style>
+		/* default / demo page */
+		* {
+			box-sizing: border-box;
+		}
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		}
+		body {
+			min-height: 1280px;
+			font-weight: 300;
+			color: #2a2a2a;
+		}
+		p,
+		h1,
+		h2,
+		h3,
+		h4,
+		a {
+			margin: 0;
+			font-weight: 300;
+		}
+		a,
+		a:visited,
+		a:hover {
+			color: #f30;
+			text-decoration: none;
+			border-bottom: 1px solid currentColor;
+		}
+		#intro {
+			max-width: 40rem;
+			margin: 1rem auto;
+			text-align: center;
+		}
+		.intro__overline {
+			font-size: 1.4rem;
+		}
+		.intro__hed {
+			font-size: 1.4rem;
+			margin: 1.5rem auto;
+			text-transform: uppercase;
+			font-weight: 900;
+			letter-spacing: 0.05em;
+		}
+		.intro__dek {
+			font-size: 1.4rem;
+		}
+		/* demo */
+		#intro {
+			margin-bottom: 100px;
+		}
+		#outro {
+			height: 640px;
+		}
+		/* scrollama */
+		#scroll {
+			position: relative;
+		}
+		.scroll__graphic {
+			position: -webkit-sticky;
+			position: sticky;
+			float: right;
+			width:100%;
+			-webkit-transform: translate3d(0, 0, 0);
+			-moz-transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0);
+			z-index:100;
+		}
+		.scroll__graphic.is-fixed {
+			position:fixed;
+			width:100%;
+			top:5%;
+		}
+		.scroll__graphic.is-bottom {
+			bottom: 0;
+			top: auto;
+		}
+		.tweet {
+			position:absolute;
+			left:50%;
+			top:50%;
+		}
+		.scroll__text {
+			position: relative;
+			padding: 0 1rem;
+			max-width: 30rem;
+			width: 33%;
+		}
+		.step {
+			position:absolute;
+			width:1px;
+			/* border-bottom: none; */
+		}
+		.step:last-child {
+			border-bottom: 1px solid #333;
+		}
+		.step.is-active {
+			background-color: lightgoldenrodyellow;
+		}
+		.step p {
+			text-align: center;
+			padding: 1rem;
+			font-size: 1.5rem;
+		}
+		svg {
+		    display: block;
+		    margin: 0 auto;
+		    font-family: 'Mada';
+		    font-weight: 300;
+		}
 
-svg {
-    display: block;
-    margin: 0 auto;
-    font-family: 'Mada';
-    font-weight: 300;
-}
+		.x-axis line {
 
-.step-container {
-  float:left;
-  width:1px;
-  position:relative;
-}
+		}
 
-.axis .domain {
-    display: none;
-}
+		.x-axis text {
+			font-family: 'Mada';
+			font-size: 12px;
+			font-weight:500;
+		}
 
-.axis--x text, .axis--y text{
-    fill: #999;
-}
+		.line {
+		    fill: none;
+		    stroke: #fff;
+		}
 
-.axis--x line {
-    stroke: #777;
-    stroke-width: .1;
-}
+		.name:nth-child(odd) .line{
+		    fill: none;
+		}
 
-.axis--name .tick line {
-    display: none;
-}
+		.area {
+		    fill: #448cab;
+		}
 
-.axis--name .tick text {
-    font-size: 14px;
-    fill: #000;
-}
+		.name:nth-child(odd) .area {
+		  fill: #5ca3c1;
+		}
+		.overlay {
+		  fill: none;
+		  pointer-events: all;
+		}
 
-.axis--name .tick text:hover {
-    font-size: 20px;
-    fill: #000;
-    text-decoration: underline;
-    text-decoration-color: #448cab;
-}
+		.focus circle {
+		  fill: none;
+		  stroke: grey;
+		}
 
-.line {
-    fill: none;
-    stroke: #fff;
-}
+		.bolded-text#mentions{
+		  font-weight: 700;
+		  font-size: 20px;
+		  baseline-shift: -44%;
+		}
 
-.name:nth-child(odd) .line{
-    fill: none;
-}
+		.bolded-text#date{
+		  font-weight: 700;
+		  font-size: 20px;
+		  baseline-shift: -21%;
+		}
 
-.area {
-    fill: #448cab;
-}
+		.sub-text {
+		  font-weight: 300;
+		  baseline-shift: sub;
+		}
 
-.name:nth-child(odd) .area {
-  fill: #5ca3c1;
-}
-.overlay {
-  fill: none;
-  pointer-events: all;
-}
+		.annotation text {
+		  fill: black;
+		}
+		.axis--name .tick:hover {
+		  cursor:pointer;
+		  background-color:grey;
+		}
 
-.focus circle {
-  fill: none;
-  stroke: grey;
-}
+		.tick {
+		  background-color:grey;
+		}
+		.change-data-button {
+			width:150px;
+		  height:10px;
+			margin: 0 auto;
+			font-weight:700;
+		}
+		.joyplot-container {
+		  position:absolute;
+			top:0;
+			width:100%;
+			left:0;
+		} h1 {
+			font-family:'Mada';
+			font-size: 80px;
+			font-weight:700;
+		}
+		.meme-name-container {
+			position:absolute;
+			font-family:'Mada';
+			top:50%;
+			left:15%;
+			width:35%;
+		}
+		.meme-name {
+			font-size: 50px;
+			font-weight:700;
+		}
+		.meme-name-sub {
+			font-size:30px;
+		}
+		.month {
+			color:#FF0000;
+			font-weight:700;
+		}
+	</style>
 
-.bolded-text#mentions{
-  font-weight: 700;
-  font-size: 20px;
-  baseline-shift: -44%;
-}
-
-.bolded-text#date{
-  font-weight: 700;
-  font-size: 20px;
-  baseline-shift: -21%;
-}
-
-.sub-text {
-  font-weight: 300;
-  baseline-shift: sub;
-}
-.meme-container {
-  width:10px;
-  height:10px;
-}
-.annotation text {
-  fill: black;
-}
-.axis--name .tick:hover {
-  cursor:pointer;
-  background-color:grey;
-}
-
-.tick {
-  background-color:grey;
-}
-.change-data-button {
-  width:10px;
-  height:10px
-}
-
-
-</style>
 </head>
+
 <body>
-  <span class="change-data-button">Change Data</span>
-  <div class="step-container"></div>
-  <div class="joyplot-container" style="float:right"></div>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="d3-annotation.min.js"></script>
-<script src='https://unpkg.com/scrollama'></script>
-<script>
-//good colors - #448cab and #5ca3c1
-
-var margin = { top: 100, right: 200, bottom: 300, left: 300 },
-    width = 1200 - margin.left - margin.right,
-    height = 5000 - margin.top - margin.bottom;
-
-// Percent two area charts can overlap
-var overlap = .5;
-
-//create svg with margins
-var svg = d3.select('.joyplot-container')
-            .append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-d3.select('.step-container')
-  .style('height', function() {
-    return height + margin.top + margin.bottom + "px";
-  });
-
-var x = function(d) { return d.date; };
-var xScale = d3.scaleTime().range([0, width]);
-var xValue = function(d) { return xScale(x(d)); };
-var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")).tickArguments([d3.timeMonth.every(1)]);
-
-var y = function(d) { return d.mentions; };
-var yScale = d3.scaleLinear();
-var yValue = function(d) { return yScale(y(d)); };
-
-var nameCalc = function(d) { return d.key; };
-var nameScale = d3.scaleBand().range([0, height]);
-var nameValue = function(d) { return nameScale(nameCalc(d)); };
-var nameAxis = d3.axisLeft(nameScale);
-
-var meanCalc = function(d) {return d.mean; };
-
-var area = d3.area()
-             .curve(d3.curveMonotoneX)
-             .x(xValue)
-             .y1(yValue);
-
-var line = area.lineY1();
-
-var parseTime = d3.timeParse("%m/%d/%Y");
-var timeFormat = d3.timeFormat("%B %e");
-var bisectDate = d3.bisector(function(d) { return d}).left;
-
-var cleanString = function(string) {
-  return string.replace(/[^A-Z0-9]+/ig, "_");
-}
-
-var rowConverter = function(d) {
-    return {
-        name: d.meme,
-        date: parseTime(d.date),
-        mentions: +d.index,
-        benchmarked_mentions: +d.benchmarked_index
-    };
-}
-
-var benchmarked = true;
-
-d3.csv('meme_interest_data_stacked.csv', rowConverter, function(error, dataset) {
-    if (error) throw error;
-
-    // Sort by time
-    dataset.sort(function(a, b) { return a.date - b.date; });
-
-    var data = d3.nest()
-        .key(function(d) { return d.name; })
-        .entries(dataset);
-
-    function findPeaks(d) {
-        for (i in d) {
-          var topic_values = d[i].values;
-          var max_index = d3.scan(topic_values, function(a, b) {return y(b) - y(a)});
-          var peakTime = x(topic_values[max_index]);
-          var peakMentions = y(topic_values[max_index]);
-          d[i].peakTime = peakTime;
-          d[i].peakMentions = peakMentions;
-        }
-    };
-    findPeaks(data);
-
-    data.sort(function(a, b) { return a.peakTime - b.peakTime;});
-
-    xScale.domain(d3.extent(dataset, x));
-    nameScale.domain(data.map(function(d) { return d.key; }));
-
-    var areaChartHeight = (1 + overlap) * (height / nameScale.domain().length);
-
-    yScale.domain([0, d3.max(dataset, function(d) {
-            return d.mentions;
-          })])
-          .range([areaChartHeight, 0]);
-
-    area.y0(yScale(0));
-
-    var xAxisTransform = height + (overlap * (height / nameScale.domain().length));
-    var xAxis2Transform = 0;
-    //height / nameScale.domain().length;
-    var yAxisTransform = overlap * (height / nameScale.domain().length);
-
-    var number_of_steps = data.length;
-    var counter = 0;
-    while (counter < number_of_steps) {
-      d3.select('.step-container')
-        .append('div')
-        .style('position', 'absolute')
-        .attr('class', 'step')
-        .style('width', '1px')
-        .style('top', function() {
-          return nameScale.bandwidth() * counter + "px";
-        })
-        .style('height', function() {
-          return nameScale.bandwidth() + "px";
-        });
-
-      counter++;
-    }
-
-    var gName = svg.append('g')
-            .attr('class', 'names')
-            .selectAll('.name')
-            .data(data)
-            .enter()
-            .append('g')
-            .attr('class', function(d) { return 'name--' + cleanString(d.key); })
-            .attr('transform', function(d) {
-                var ty = nameValue(d);
-                return 'translate(0,' + ty + ')';
-            });
-
-    gName.append('path')
-        .attr('class', 'area')
-        .datum(function(d) { return d.values; })
-        .attr('d', area);
-
-    gName.append('path')
-        .attr('class', 'line')
-        .datum(function(d) { return d.values; })
-        .attr('d', line);
-
-    gName.append('rect')
-         .attr('class', 'step')
-         .attr('data-step', function(d, i) {
-           return i;
-         })
-         .attr('width', '100%')
-         .attr('height', function() {
-           return nameScale.bandwidth();
-         })
-         .attr('y', function() {
-           return nameScale.bandwidth() * overlap;
-         })
-         .attr('visibility', 'hidden');
-
-    var mouseover = function(index) {
-      var name, peakTime, peakMentions;
-      name = data[index].key;
-      peakTime = data[index].peakTime;
-      peakMentions = data[index].peakMentions;
-
-      console.log(peakMentions);
-      console.log(peakTime);
-
-      const type = d3.annotationCallout;
-
-      const annotations = [{
-        note: {
-          label: "during the week of " + timeFormat(peakTime),
-          title: "Index of " + peakMentions
-        },
-        //can use x, y directly instead of data
-        data: { date: peakTime, mentions: peakMentions},
-        dy: -25,
-        dx: 25
-      }];
-
-      const makeAnnotations = d3.annotation()
-        .type(type)
-        //accessors & accessorsInverse not needed
-        //if using x, y in annotations JSON
-        .accessors({
-          x: d => xScale(d.date),
-          y: d => yScale(d.mentions)
-        })
-        .accessorsInverse({
-           date: d => xScale.invert(d.x),
-           close: d => yScale.invert(d.y)
-        })
-        .annotations(annotations);
-
-      var nameNoSpace = cleanString(name);
-
-      d3.select("g.name--" + nameNoSpace)
-        .append("g")
-        .attr("class", "annotation-group")
-        .call(makeAnnotations);
-
-    }
-
-    function handleStepEnter(response) {
-
-      console.log('hey');
-
-      d3.selectAll(".annotation-group").remove();
-
-      d3.select("g.axis--name")
-        .selectAll("g.tick")
-        .attr("opacity", "1");
-
-      d3.select("g.names")
-        .selectAll("g")
-        .attr("opacity", "1");
-
-      var index, name, peakTime, peakMentions;
-      index = response.index;
-      name = data[index].key;
-      peakTime = data[index].peakTime;
-      peakMentions = data[index].peakMentions;
-
-      const type = d3.annotationCallout;
-
-      const annotations = [{
-        note: {
-          label: "during the week of " + timeFormat(peakTime),
-          title: "Index of " + peakMentions
-        },
-        //can use x, y directly instead of data
-        data: { date: peakTime, mentions: peakMentions},
-        dy: -25,
-        dx: 25
-      }];
-
-      const makeAnnotations = d3.annotation()
-        .type(type)
-        //accessors & accessorsInverse not needed
-        //if using x, y in annotations JSON
-        .accessors({
-          x: d => xScale(d.date),
-          y: d => yScale(d.mentions)
-        })
-        .accessorsInverse({
-           date: d => xScale.invert(d.x),
-           close: d => yScale.invert(d.y)
-        })
-        .annotations(annotations);
-
-      var nameNoSpace = cleanString(name);
-
-      d3.select("g.names")
-        .selectAll("g")
-        .attr("opacity", ".1")
-        .filter(function() {
-           var className = "name--" + nameNoSpace;
-           if (d3.select(this).attr("class") == className) {
-              return true;
-           } else {
-              return false;
-           }
-         })
-         .attr("opacity", "1")
-
-       d3.select("g.axis--name")
-         .selectAll("g.tick")
-         .attr("opacity", "1")
-         .filter(function() {
-            if (d3.select(this).text() == name) {
-               return false;
-            } else {
-               return true;
-            }
-          })
-          .attr("opacity", ".1");
-
-        d3.select("g.name--" + nameNoSpace)
-          .append("g")
-          .attr("class", "annotation-group")
-          .call(makeAnnotations);
-
-    }
-
-    function handleStepExit(response) {
-      console.log('leaving!');
-    }
-
-    function init() {
-      // instantiate the scrollama
-      var scroller = scrollama();
-
-      // setup the instance, pass callback functions
-      scroller
-        .setup({
-          container:'.step-container',
-          step: '.step', // required
-          offset: 0.5, // optional, default = 0.5
-          debug: false // optional, default = false
-
-        })
-        .onStepEnter(handleStepEnter)
-        .onStepExit(handleStepExit);
-    }
-
-    init();
-
-    svg.append('g')
-       .attr('class', 'axis axis--x')
-       .attr('transform', 'translate(0,' + xAxisTransform + ')')
-       .call(xAxis);
-
-    svg.append('g')
-       .attr('class', 'axis axis--x2')
-       .attr('transform', 'translate(0,' + xAxis2Transform + ')')
-       .call(xAxis);
-
-    svg.append('g')
-       .attr('class', 'axis axis--name')
-       .attr('transform', 'translate(0,' + yAxisTransform + ')')
-       .call(nameAxis);
-
-    d3.select(".change-data-button")
-      .on("click", function() {
-        changeData();
-      });
-
-    d3.select(".axis--name")
-      .selectAll(".tick")
-      .on("mouseover", function(d, i) {
-
-          d3.select("g.names")
-            .selectAll("g")
-            .attr("opacity", ".1")
-            .filter(function() {
-               var className = "name--" + cleanString(d);
-               if (d3.select(this).attr("class") == className) {
-                  return true;
-               } else {
-                  return false;
-               }
-             })
-             .attr("opacity", "1")
-
-           d3.select("g.axis--name")
-             .selectAll("g.tick")
-             .attr("opacity", "1")
-             .filter(function() {
-                if (d3.select(this).text() == d) {
-                   return false;
-                } else {
-                   return true;
-                }
-              })
-              .attr("opacity", ".1");
-
-            mouseover(i);
-
-      })
-      .on("mouseout", function() {
-          d3.selectAll(".annotation-group").remove();
-
-          d3.select("g.axis--name")
-            .selectAll("g.tick")
-            .attr("opacity", "1");
-
-          d3.select("g.names")
-            .selectAll("g")
-            .attr("opacity", "1");
-      });
-
-    var changeData = function() {
-      if (benchmarked) {
-        y = function(d) { return d.benchmarked_mentions; };
-        yScale.domain([0, d3.max(dataset, function(d) {
-                return d.benchmarked_mentions;
-              })])
-        benchmarked = false;
-      } else {
-        y = function(d) { return d.mentions; };
-        yScale.domain([0, d3.max(dataset, function(d) {
-                return d.mentions;
-              })])
-        benchmarked = true;
-      }
-
-      function findPeaks(d) {
-          for (i in d) {
-            var topic_values = d[i].values;
-            var max_index = d3.scan(topic_values, function(a, b) {return y(b) - y(a)});
-            var peakTime = x(topic_values[max_index]);
-            var peakMentions = y(topic_values[max_index]);
-            d[i].peakTime = peakTime;
-            d[i].peakMentions = peakMentions;
-          }
-      };
-      findPeaks(data);
-
-      xScale.domain(d3.extent(dataset, x));
-      nameScale.domain(data.map(function(d) { return d.key; }));
-
-      var areaChartHeight = (1 + overlap) * (height / nameScale.domain().length);
-
-
-      area.y0(yScale(0));
-
-      gName.select('path.area')
-           .datum(function(d) { return d.values; })
-           .transition()
-           .duration(1200)
-           .attr('d', area);
-
-      gName.select('path.line')
-           .datum(function(d) { return d.values; })
-           .transition()
-           .duration(1200)
-           .attr('d', line);
-
-    }
-
-
-});
-
-</script>
+	<section id='intro'>
+		<h1>2017 Wasn't So Great, But It Was Great For Memes</h1>
+	</section>
+	<section id='scroll'>
+		<div class="scroll__graphic">
+			<div class="change-data-button">Change Data</div>
+			<div class="meme-name-container">
+					<p class="meme-name">
+						But That's None of my Business
+					</p>
+					<p class="meme-name-sub">
+						Peaked in <span class="month">January</span>.
+					</p>
+			 </div>
+			 <div class="tweet">
+		      <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">startling, informative, and crazy cool all at once - <a href="https://t.co/rTY8XMHpmy">https://t.co/rTY8XMHpmy</a></p>&mdash; Jack Beckwith (@jackbeckwith23) <a href="https://twitter.com/jackbeckwith23/status/865353707516436482?ref_src=twsrc%5Etfw">May 18, 2017</a></blockquote>
+		      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+			 </div>
+    </div>
+		<div class='scroll__text'>
+		</div>
+		<div class='joyplot-container'></div>
+	</section>
+	<section id='outro'></section>
+	<div class='debug'></div>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src='https://unpkg.com/scrollama'></script>
+	<script src="d3-annotation.min.js"></script>
+	<script>
+		//good colors - #448cab and #5ca3c1
+
+		var bodyWidth = d3.select('body').node().offsetWidth;
+		var windowHeight = window.innerHeight;
+
+		margin_sides = bodyWidth * .1;
+
+		var margin = { top: 400, right: margin_sides, bottom: 400, left: margin_sides },
+				width = bodyWidth - margin.left - margin.right,
+				height = 5000 - margin.top - margin.bottom;
+
+		// Percent two area charts can overlap
+		var overlap = .5;
+
+		//create svg with margins
+		var svg = d3.select('.joyplot-container')
+								.append('svg')
+								.attr('width', width + margin.left + margin.right)
+								.attr('height', height + margin.top + margin.bottom)
+								.append('g')
+								.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+		var fixed_axis_svg = d3.select('.scroll__graphic')
+													 .append('svg')
+													 .attr('width', width + margin.left + margin.right)
+													 .attr('transform', 'translate(0, ' + (windowHeight - 150) + ')')
+					 								 .attr('height', "100px")
+					 								 .append('g')
+													 .attr('transform', 'translate(' + margin.left + ',' + 20 + ')');
+
+		var x = function(d) { return d.date; };
+		var xScale = d3.scaleTime().range([0, width]);
+		var xValue = function(d) { return xScale(x(d)); };
+		var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")).tickArguments([d3.timeMonth.every(1)]);
+
+		var y = function(d) { return d.mentions; };
+		var yScale = d3.scaleLinear();
+		var yValue = function(d) { return yScale(y(d)); };
+
+		var nameCalc = function(d) { return d.key; };
+		var nameScale = d3.scaleBand().range([0, height]);
+		var nameValue = function(d) { return nameScale(nameCalc(d)); };
+		var nameAxis = d3.axisLeft(nameScale);
+
+		var meanCalc = function(d) {return d.mean; };
+
+		var area = d3.area()
+								 .curve(d3.curveMonotoneX)
+								 .x(xValue)
+								 .y1(yValue);
+
+		var line = area.lineY1();
+
+		var parseTime = d3.timeParse("%m/%d/%Y");
+		var timeFormat = d3.timeFormat("%B %e");
+		var month_numerical = d3.timeFormat("%m");
+		var month_full_text = d3.timeFormat("%B");
+		var bisectDate = d3.bisector(function(d) { return d}).left;
+
+		var cleanString = function(string) {
+			return string.replace(/[^A-Z0-9]+/ig, "_");
+		}
+
+		var rowConverter = function(d) {
+				return {
+						name: d.meme,
+						date: parseTime(d.date),
+						mentions: +d.index,
+						benchmarked_mentions: +d.benchmarked_index
+				};
+		}
+
+		var benchmarked = true;
+		d3.csv('meme_interest_data_stacked.csv', rowConverter, function(error, dataset) {
+		    if (error) throw error;
+
+		    // Sort by time
+		    dataset.sort(function(a, b) { return a.date - b.date; });
+
+		    var data = d3.nest()
+		        .key(function(d) { return d.name; })
+		        .entries(dataset);
+
+		    function findPeaks(d) {
+		        for (i in d) {
+		          var topic_values = d[i].values;
+		          var max_index = d3.scan(topic_values, function(a, b) {return y(b) - y(a)});
+		          var peakTime = x(topic_values[max_index]);
+		          var peakMentions = y(topic_values[max_index]);
+		          d[i].peakTime = peakTime;
+		          d[i].peakMentions = peakMentions;
+		        }
+		    };
+		    findPeaks(data);
+
+		    data.sort(function(a, b) { return a.peakTime - b.peakTime;});
+
+		    xScale.domain(d3.extent(dataset, x));
+		    nameScale.domain(data.map(function(d) { return d.key; }));
+
+		    var areaChartHeight = (1 + overlap) * (height / nameScale.domain().length);
+
+		    yScale.domain([0, d3.max(dataset, function(d) {
+		            return d.mentions;
+		          })])
+		          .range([areaChartHeight, 0]);
+
+		    area.y0(yScale(0));
+
+		    var xAxisTransform = height + (overlap * (height / nameScale.domain().length));
+		    var xAxis2Transform = -100;
+		    //height / nameScale.domain().length;
+		    var yAxisTransform = overlap * (height / nameScale.domain().length);
+
+				d3.select('.scroll__text')
+					.style('height', function() {
+						return height + margin.top + margin.bottom + "px";
+					})
+					.style('top', function() {
+						return margin.top - (nameScale.bandwidth() * 3) + "px";
+					});
+
+
+		    var number_of_steps = data.length + 3;
+		    var counter = 0;
+		    while (counter < number_of_steps) {
+		      d3.select('.scroll__text')
+		        .append('div')
+		        .attr('class', 'step')
+		        .style('top', function() {
+		          return nameScale.bandwidth() * counter + (nameScale.bandwidth() * overlap)+ "px";
+		        })
+		        .style('height', function() {
+		          return nameScale.bandwidth() + "px";
+		        });
+
+		      counter++;
+		    }
+
+		    var gName = svg.append('g')
+		            .attr('class', 'names')
+		            .selectAll('.name')
+		            .data(data)
+		            .enter()
+		            .append('g')
+		            .attr('class', function(d) { return 'name--' + cleanString(d.key); })
+		            .attr('transform', function(d) {
+		                var ty = nameValue(d);
+		                return 'translate(0,' + ty + ')';
+		            });
+
+		    gName.append('path')
+		        .attr('class', 'area')
+		        .datum(function(d) { return d.values; })
+		        .attr('d', area);
+
+		    gName.append('path')
+		        .attr('class', 'line')
+		        .datum(function(d) { return d.values; })
+		        .attr('d', line);
+
+
+				// using d3 for convenience
+				var container = d3.select('#scroll');
+				var graphic = container.select('.scroll__graphic');
+				var text = container.select('.scroll__text');
+				var step = text.selectAll('.step');
+				// initialize the scrollama
+				var scroller = scrollama();
+				// generic window resize listener event
+
+				// scrollama event handlers
+				function handleStepEnter(response) {
+					// response = { element, direction, index }
+					// add color to current step only
+					d3.selectAll(".annotation-group").remove();
+
+		      d3.select("g.names")
+		        .selectAll("g")
+		        .attr("opacity", "1");
+
+		      var index, direction, name, peakTime, peakMentions;
+		      direction = response.direction;
+					if (direction == "down") {
+						index = response.index + 2;
+					} else {
+						index = response.index - 4;
+					}
+
+		      name = data[index].key;
+		      peakTime = data[index].peakTime;
+		      peakMentions = data[index].peakMentions;
+
+					if (month_numerical(peakTime) >= 6) {
+						d3.select(".tweet").style("left", function() {
+							return margin_sides + "px";
+						})
+						d3.select(".meme-name-container").style("left", "50%");
+					} else if (month_numerical(peakTime) <= 6) {
+						d3.select(".tweet").style("left", "55%");
+						d3.select(".meme-name-container").style("left", "15%");
+					}
+
+					d3.select(".date-circle")
+						.attr("cx", xScale(peakTime));
+
+					d3.select(".meme-name")
+						.text(name);
+
+					d3.select(".month")
+						.text(month_full_text(peakTime));
+
+		      const type = d3.annotationCallout;
+
+		      const annotations = [{
+		        note: {
+		          title: "Index of " + peakMentions
+		        },
+		        //can use x, y directly instead of data
+		        data: { date: peakTime, mentions: peakMentions},
+		        dy: -25,
+		        dx: 25
+		      }];
+
+		      const makeAnnotations = d3.annotation()
+		        .type(type)
+		        //accessors & accessorsInverse not needed
+		        //if using x, y in annotations JSON
+		        .accessors({
+		          x: d => xScale(d.date),
+		          y: d => yScale(d.mentions)
+		        })
+		        .accessorsInverse({
+		           date: d => xScale.invert(d.x),
+		           close: d => yScale.invert(d.y)
+		        })
+		        .annotations(annotations);
+
+		      var nameNoSpace = cleanString(name);
+
+		      d3.select("g.names")
+		        .selectAll("g")
+		        .attr("opacity", ".1")
+		        .filter(function() {
+		           var className = "name--" + nameNoSpace;
+		           if (d3.select(this).attr("class") == className) {
+		              return true;
+		           } else {
+		              return false;
+		           }
+		         })
+		         .attr("opacity", "1")
+
+		       d3.select("g.axis--name")
+		         .selectAll("g.tick")
+		         .attr("opacity", "1")
+		         .filter(function() {
+		            if (d3.select(this).text() == name) {
+		               return false;
+		            } else {
+		               return true;
+		            }
+		          })
+		          .attr("opacity", ".1");
+
+		        d3.select("g.name--" + nameNoSpace)
+		          .append("g")
+		          .attr("class", "annotation-group")
+		          .call(makeAnnotations);
+				}
+				function handleContainerEnter(response) {
+					// response = { direction }
+					// old school
+					// sticky the graphic
+					graphic.classed('is-fixed', true);
+					graphic.classed('is-bottom', false);
+				}
+				function handleContainerExit(response) {
+					// response = { direction }
+					// old school
+					// un-sticky the graphic, and pin to top/bottom of container
+					graphic.classed('is-fixed', false);
+					graphic.classed('is-bottom', response.direction === 'down');
+				}
+				function init() {
+					// 1. force a resize on load to ensure proper dimensions are sent to scrollama
+					// 2. setup the scroller passing options
+					// this will also initialize trigger observations
+					// 3. bind scrollama event handlers (this can be chained like below)
+					scroller.setup({
+						container: '#scroll',
+						graphic: '.scroll__graphic',
+						text: '.scroll__text',
+						step: '.scroll__text .step',
+						debug: false,
+						offset: 0.5,
+					})
+						.onStepEnter(handleStepEnter)
+						.onContainerEnter(handleContainerEnter)
+						.onContainerExit(handleContainerExit);
+					// setup resize event
+				}
+				// kick things off
+				init();
+
+				/*
+				svg.append('g')
+		       .attr('class', 'axis axis--x')
+		       .attr('transform', 'translate(0,' + xAxisTransform + ')')
+		       .call(xAxis);
+				*/
+
+		    fixed_axis_svg.append('g')
+		       .attr('class', 'x-axis')
+		       .call(xAxis);
+
+				fixed_axis_svg.append('circle')
+											.attr('class', 'date-circle')
+											.attr('cx', 1)
+											.attr('cy', 0)
+											.attr('r', 4)
+											.attr('fill', 'red');
+
+
+				/*
+		    svg.append('g')
+		       .attr('class', 'axis axis--name')
+		       .attr('transform', 'translate(0,' + yAxisTransform + ')')
+		       .call(nameAxis);
+				*/
+
+
+		    d3.select(".change-data-button")
+		      .on("click", function() {
+		        changeData();
+		      });
+
+		    d3.select(".axis--name")
+		      .selectAll(".tick");
+
+		    var changeData = function() {
+		      if (benchmarked) {
+		        y = function(d) { return d.benchmarked_mentions; };
+		        yScale.domain([0, d3.max(dataset, function(d) {
+		                return d.benchmarked_mentions;
+		              })])
+		        benchmarked = false;
+		      } else {
+		        y = function(d) { return d.mentions; };
+		        yScale.domain([0, d3.max(dataset, function(d) {
+		                return d.mentions;
+		              })])
+		        benchmarked = true;
+		      }
+
+		      function findPeaks(d) {
+		          for (i in d) {
+		            var topic_values = d[i].values;
+		            var max_index = d3.scan(topic_values, function(a, b) {return y(b) - y(a)});
+		            var peakTime = x(topic_values[max_index]);
+		            var peakMentions = y(topic_values[max_index]);
+		            d[i].peakTime = peakTime;
+		            d[i].peakMentions = peakMentions;
+		          }
+		      };
+		      findPeaks(data);
+
+		      xScale.domain(d3.extent(dataset, x));
+		      nameScale.domain(data.map(function(d) { return d.key; }));
+
+		      var areaChartHeight = (1 + overlap) * (height / nameScale.domain().length);
+
+
+		      area.y0(yScale(0));
+
+		      gName.select('path.area')
+		           .datum(function(d) { return d.values; })
+		           .transition()
+		           .duration(1200)
+		           .attr('d', area);
+
+		      gName.select('path.line')
+		           .datum(function(d) { return d.values; })
+		           .transition()
+		           .duration(1200)
+		           .attr('d', line);
+	 			}
+		});
+
+
+	</script>
 </body>
+
 </html>
