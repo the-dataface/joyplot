@@ -1,2 +1,0 @@
-# joyplot
-Template for joyplot
