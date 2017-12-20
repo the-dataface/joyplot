@@ -14,11 +14,11 @@ body {
 	font-weight: 300;
 	color: #2a2a2a;
 }
-		
+
 p, h1, h2, h3, h4, a {
 	margin: 0;
 }
-		
+
 h1 {
 	font-family:'Mada';
 	font-size: 80px;
@@ -41,7 +41,7 @@ a, a:visited, a:hover {
 #intro {
 	margin-bottom: 100px;
 }
-		
+
 
 #outro {
 	height: 640px;
@@ -51,7 +51,7 @@ a, a:visited, a:hover {
 #scroll {
 	position: relative;
 }
-		
+
 .scroll__graphic {
 	position: -webkit-sticky;
 	position: sticky;
@@ -63,7 +63,7 @@ a, a:visited, a:hover {
 	transform: translate3d(0, 0, 0);
 	z-index:100;
 }
-		
+
 .scroll__graphic.is-fixed {
 	position:fixed;
 	width:100%;
@@ -74,7 +74,7 @@ a, a:visited, a:hover {
 	bottom: 0;
 	top: auto;
 }
-		
+
 .change-data-button {
 	width:150px;
 	height:10px;
@@ -95,12 +95,11 @@ a, a:visited, a:hover {
 }
 
 .meme-name {
-	font-size: 50px;
 	font-weight:700;
 }
 
 .meme-name-sub {
-	font-size:30px;
+
 }
 
 .month {
@@ -108,10 +107,53 @@ a, a:visited, a:hover {
 	font-weight:700;
 }
 
+@media only screen and (min-width : 1000px) {
+    .meme-name {
+        font-size: 50px;
+    }
+
+    .meme-name-sub {
+        font-size:30px;
+    }
+
+    .month {
+        font-size:30px;
+    }
+}
+
+@media only screen and (min-width : 764px) and (max-width: 999px) {
+		.meme-name {
+				font-size: 40px;
+		}
+
+		.meme-name-sub {
+				font-size:25px;
+		}
+
+		.month {
+				font-size:25px;
+		}
+}
+
+@media only screen and (max-width: 763px) {
+		.meme-name {
+				font-size: 30px;
+		}
+
+		.meme-name-sub {
+				font-size:20px;
+		}
+
+		.month {
+				font-size:20px;
+		}
+}
+
 .tweet {
 	position:absolute;
-	left:50%;
+	left:55%;
 	top:50%;
+	width:35%;
 }
 
 .scroll__text {
@@ -126,7 +168,7 @@ a, a:visited, a:hover {
 	width:1px;
 	/* border-bottom: none; */
 }
-		
+
 .joyplot-container {
 	position:absolute;
 	top:0;
@@ -140,7 +182,7 @@ svg {
 	font-family: 'Mada';
 	font-weight: 300;
 }
-		
+
 .x-axis line {
 }
 
@@ -149,12 +191,12 @@ svg {
 	font-size: 12px;
 	font-weight:500;
 }
-		
+
 .line {
 	fill: none;
 	stroke: #fff;
 }
-		
+
 .area {
 	fill: #448cab;
 }
