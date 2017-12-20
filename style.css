@@ -108,7 +108,7 @@ a, a:visited, a:hover {
 	font-weight:700;
 }
 
-.tweet {
+#tweet {
 	position:absolute;
 	left:50%;
 	top:50%;

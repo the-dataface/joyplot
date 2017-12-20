@@ -82,7 +82,8 @@ var rowConverter = function (d) {
 		name: d.meme,
 		date: parseTime(d.date),
 		mentions: +d.index,
-		benchmarked_mentions: +d.benchmarked_index
+		benchmarked_mentions: +d.benchmarked_index,
+		tweet_id: d.twitter_id
   };
 };
 
@@ -110,8 +111,20 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		}
 	}
 	
+	// for each meme, find assign it the proper tweet_id
+	function getTweetId (d) {
+		for (var i in d) {
+			console.log(d[i])
+			var tweet_id = d[i].values[0].tweet_id;
+			d[i].tweet_id = tweet_id;
+		}
+	}
+	
 	// run findPeaks function on our dataset
 	findPeaks(data);
+	
+	// run getTweetId function on our dataset
+	getTweetId(data);
 	
 	// sort memes by peak time
 	data.sort(function (a, b) { return a.peakTime - b.peakTime; });
@@ -189,7 +202,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	var container = d3.select('#scroll');
 	container.style('height', function () {
 		return height + 'px';
-  });
+  	});
   
 	var graphic = container.select('.scroll__graphic');
 	var text = container.select('.scroll__text');
@@ -204,7 +217,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// response = { element, direction, index }
 		// remove previous annotation
 		d3.selectAll('.annotation-group').remove();
-		
+
 		// set opacity back to 1s
 		d3.select('g.names')
 			.selectAll('g')
@@ -227,12 +240,12 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
 		if (month_numerical(peakTime) >= 6) {
-			d3.select('.tweet').style('left', function () {
+			d3.select('#tweet').style('left', function () {
 				return margin_sides + 'px';
 			});
 			d3.select('.meme-name-container').style('left', '50%');
 		} else if (month_numerical(peakTime) <= 6) {
-			d3.select('.tweet').style('left', '55%');
+			d3.select('#tweet').style('left', '55%');
 			d3.select('.meme-name-container').style('left', '15%');
 		}
 		
@@ -266,6 +279,9 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		
 		// create annotations
 		createAnnotations(index);
+		
+		// swap out tweets
+		showTweet(index);
 	}
 				
 	// fix sticky graphic when enter container
@@ -296,7 +312,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			graphic: '.scroll__graphic',
 			text: '.scroll__text',
 			step: '.scroll__text .step',
-			debug: false,
+			debug: true,
 			offset: 0.85
 		})
 			.onStepEnter(handleStepEnter)
@@ -371,6 +387,19 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		.append('g')
 		.attr('class', 'annotation-group')
 		.call(makeAnnotations);
+	}
+	
+	function showTweet (index) {
+		graphic.select('#tweet').remove()
+		graphic.append('div').attr('id','tweet')
+		twttr.widgets.createTweet(
+			data[index].tweet_id, document.getElementById('tweet'), 
+			{
+				conversation : 'none',    // or all
+				cards        : 'visible',  // or visible 
+				linkColor    : '#cc0000', // default is blue
+				theme        : 'light'    // or dark
+			})
 	}
 	
 	// update data from benchmarked to non-benchmarked
