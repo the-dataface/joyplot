@@ -238,12 +238,10 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		peakMentions = data[index].peakMentions;
 
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
-		if (month_numerical(peakTime) >= 6) {
-			d3.select('#tweet').style('left', function () {
-				return margin_sides + 'px';
-			});
-			d3.select('.meme-name-container').style('left', '50%');
-		} else if (month_numerical(peakTime) <= 6) {
+		if (month_numerical(peakTime) >= 7) {
+			d3.select('#tweet').style('left', '15%');
+			d3.select('.meme-name-container').style('left', '55%');
+		} else if (month_numerical(peakTime) < 7) {
 			d3.select('#tweet').style('left', '55%');
 			d3.select('.meme-name-container').style('left', '15%');
 		}

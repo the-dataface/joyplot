@@ -107,43 +107,42 @@ a, a:visited, a:hover {
 	font-weight:700;
 }
 
-#tweet {
 @media only screen and (min-width : 1000px) {
-    .meme-name {
-        font-size: 50px;
-    }
+	.meme-name {
+		font-size: 50px;
+	}
 
-    .meme-name-sub {
-        font-size:30px;
-    }
+	.meme-name-sub {
+		font-size:30px;
+	}
 
-    .month {
-        font-size:30px;
-    }
+	.month {
+		font-size:30px;
+	}
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 		.meme-name {
 				font-size: 40px;
-		}
+	}
 
-		.meme-name-sub {
-				font-size:25px;
-		}
+	.meme-name-sub {
+			font-size:25px;
+	}
 
-		.month {
-				font-size:25px;
-		}
+	.month {
+			font-size:25px;
+	}
 }
 
 @media only screen and (max-width: 763px) {
-		.meme-name {
-				font-size: 30px;
-		}
+	.meme-name {
+			font-size: 30px;
+	}
 
-		.meme-name-sub {
-				font-size:20px;
-		}
+	.meme-name-sub {
+			font-size:20px;
+	}
 
 		.month {
 				font-size:20px;
