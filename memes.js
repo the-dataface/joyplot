@@ -1,13 +1,13 @@
 // width of body to use as width for svg
-var bodyWidth = d3.select('body').node().offsetWidth;
+var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
 
 // want margins to be 10% of body width. should change maybe
-var margin_sides = bodyWidth * 0.1;
+var margin_sides = windowWidth * 0.1;
 
 // set margins
 var margin = { top: 600, right: margin_sides, bottom: 400, left: margin_sides },
-  width = bodyWidth - margin.left - margin.right,
+  width = windowWidth - margin.left - margin.right,
   height = 5000 - margin.top - margin.bottom;
 
 // percent two area charts can overlap
