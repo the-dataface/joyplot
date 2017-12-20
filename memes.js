@@ -114,15 +114,14 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	// for each meme, find assign it the proper tweet_id
 	function getTweetId (d) {
 		for (var i in d) {
-			console.log(d[i])
 			var tweet_id = d[i].values[0].tweet_id;
 			d[i].tweet_id = tweet_id;
 		}
 	}
-	
+
 	// run findPeaks function on our dataset
 	findPeaks(data);
-	
+
 	// run getTweetId function on our dataset
 	getTweetId(data);
 
@@ -202,7 +201,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	container.style('height', function () {
 		return height + 'px';
   });
-  
+
 	var graphic = container.select('.scroll__graphic');
 	var text = container.select('.scroll__text');
 	var step = text.selectAll('.step');
@@ -237,13 +236,16 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		peakTime = data[index].peakTime;
 		peakMentions = data[index].peakMentions;
 
+    graphic.select('#tweet').remove()
+		graphic.append('div').attr('id','tweet');
+
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
 		if (month_numerical(peakTime) >= 7) {
-			d3.select('#tweet').style('left', '15%');
-			d3.select('.meme-name-container').style('left', '55%');
+			graphic.select('#tweet').style('left', '15%');
+			graphic.select('.meme-name-container').style('left', '55%');
 		} else if (month_numerical(peakTime) < 7) {
-			d3.select('#tweet').style('left', '55%');
-			d3.select('.meme-name-container').style('left', '15%');
+			graphic.select('#tweet').style('left', '55%');
+			graphic.select('.meme-name-container').style('left', '15%');
 		}
 
 		// moves cute little red circle
@@ -276,7 +278,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// create annotations
 		createAnnotations(index);
-		
+
 		// swap out tweets
 		showTweet(index);
 	}
@@ -387,18 +389,16 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	}
 
 	function showTweet (index) {
-		graphic.select('#tweet').remove()
-		graphic.append('div').attr('id','tweet')
 		twttr.widgets.createTweet(
-			data[index].tweet_id, document.getElementById('tweet'), 
+			data[index].tweet_id, document.getElementById('tweet'),
 			{
 				conversation : 'none',    // or all
-				cards        : 'visible',  // or visible 
+				cards        : 'visible',  // or visible
 				linkColor    : '#cc0000', // default is blue
 				theme        : 'light'    // or dark
 			})
 	}
-  
+
 	// update data from benchmarked to non-benchmarked
 	function changeData () {
 		// update y function to look at benchmarked_mentions instead of normal mentions
