@@ -1,39 +1,43 @@
-// width of body to use as width for svg
+// width of window
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
+left_margin = windowWidth * .1;
 
-// want margins to be 10% of body width. should change maybe
-var margin_sides = windowWidth * 0.1;
-
-// set margins
-var margin = { top: 600, right: margin_sides, bottom: 400, left: margin_sides },
-  width = windowWidth - margin.left - margin.right,
-  height = 5000 - margin.top - margin.bottom;
+// set margins - need to make dynamic eventually
+var margin = { top: 500, bottom: 1000};
 
 // percent two area charts can overlap
 var overlap = 0.5;
 
+//svg container and svg transform value
+svg_container_height = 7000;
+svg_height = svg_container_height - margin.top - margin.bottom;
+joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
+
 // create svg with margins
 var svg = d3.select('.joyplot-container')
 			.append('svg')
-			.attr('width', width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
+        .attr('width', '100%')
+        .attr('height', svg_container_height)
+        .attr("preserveAspectRatio", "none")
 			.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+			  .attr('transform', 'translate(0,' + margin.top + ')');
 
 // create separate svg for fixed x-axis that will be in scrollytelling
-var fixed_axis_svg = d3.select('.scroll__graphic').append('svg')
-					   .attr('width', width + margin.left + margin.right)
-					   // put at the bottom of the screen but up 150px so axis fits. will need to make more dynamic
-					   .attr('transform', 'translate(0, ' + (windowHeight - 150) + ')')
-					   .attr('height', '100px')
-					   .append('g')
-					   // transform 20px downwards so x-axis fits within svg so doesn't get cut off, otherwise top of axis would get cut off
-					   .attr('transform', 'translate(' + margin.left + ',' + 20 + ')');
+var fixed_axis_svg = d3.select('.scroll__graphic')
+											 .append('svg')
+										     .attr('width', '100%')
+										     // put at the bottom of the screen
+										     .attr('transform', 'translate(0,' + 10 + ')')
+										     .attr('height', '100px')
+										   .append('g')
+										     // transform 20px downwards so x-axis fits within svg so doesn't get cut off, otherwise top of axis would get cut off
+					               .attr('width', '80%')
+					               .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
 
 // functions for finding x values
 var x = function (d) { return d.date; };
-var xScale = d3.scaleTime().range([0, width]);
+var xScale = d3.scaleTime().range([0, joyplot_width]);
 var xValue = function (d) { return xScale(x(d)); };
 var xAxis = d3.axisBottom(xScale)
 			  .tickFormat(d3.timeFormat('%b'))
@@ -46,12 +50,11 @@ var yValue = function (d) { return yScale(y(d)); };
 
 // functions for finding values for each meme's name/joyplot. don't use axis anymore
 var nameCalc = function (d) { return d.key; };
-var nameScale = d3.scaleBand().range([0, height]);
+var nameScale = d3.scaleBand().range([0, svg_height]);
 var nameValue = function (d) { return nameScale(nameCalc(d)); };
-var nameAxis = d3.axisLeft(nameScale);
 
 // global variable to store the meme we're currently on
-var current_index;
+var current_index = 0;
 // global variable to keep track of whether we're using benchmarked data or not
 var benchmarked = true;
 
@@ -133,7 +136,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	nameScale.domain(data.map(function (d) { return d.key; }));
 
 	// height of a joyplot is overlap % times the height of svg divided by number of names
-	var areaChartHeight = (1 + overlap) * (height / nameScale.domain().length);
+	var areaChartHeight = (1 + overlap) * (svg_height / nameScale.domain().length);
 
 	// set domain and range for y scale
 	yScale.domain([0, d3.max(dataset, function (d) {
@@ -147,28 +150,32 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	// set step container to be height of svg and start at first joyplot
 	d3.select('.scroll__text')
 		.style('height', function () {
-			return height + margin.top + margin.bottom + 'px';
+			return svg_height + margin.top + margin.bottom + 'px';
 	})
 		.style('top', function () {
 			return margin.top - nameScale.bandwidth() + 'px';
 	});
 
 	// create a step for each joyplot that's the height of the joyplot w/o the overlap
-	var number_of_steps = data.length;
-	var counter = 0;
-	while (counter < number_of_steps) {
-		d3.select('.scroll__text')
-			.append('div')
-			.attr('class', 'step')
-			.style('top', function () {
-				return nameScale.bandwidth() * (counter + 1) + (nameScale.bandwidth() * overlap) + 'px';
-		})
-			.style('height', function () {
-				return nameScale.bandwidth() + 'px';
-		});
+  function createSteps() {
+    var number_of_steps = data.length;
+  	var counter = 0;
+  	while (counter < number_of_steps) {
+  		d3.select('.scroll__text')
+  			.append('div')
+  			.attr('class', 'step')
+  			.style('top', function () {
+  				return nameScale.bandwidth() * (counter + 1) + (nameScale.bandwidth() * overlap) + 'px';
+  		})
+  			.style('height', function () {
+  				return nameScale.bandwidth() + 'px';
+  		});
 
-		counter++;
+    counter++;
+    }
 	}
+
+  createSteps();
 
 	// create a group for each meme's joyplot
 	var gName = svg.append('g')
@@ -199,7 +206,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	// set variables for each container we have, and also set the scroll container to be height of svg
 	var container = d3.select('#scroll');
 	container.style('height', function () {
-		return height + 'px';
+		return svg_height + 'px';
   });
 
 	var graphic = container.select('.scroll__graphic');
@@ -208,6 +215,38 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 	// initialize the scrollama
 	var scroller = scrollama();
+
+  //work in progress
+  function handleResize() {
+    windowHeight = window.innerHeight;
+    windowWidth = window.innerWidth;
+
+    x_width = windowWidth * .8;
+    left_margin = windowWidth * .1;
+
+		d3.select('twitterwidget')
+			.style('width', '100%');
+
+    d3.select('.joyplot-container')
+      .style('width', x_width);
+
+    xScale.range([0, x_width]);
+    xAxis = d3.axisBottom(xScale)
+    			    .tickFormat(d3.timeFormat('%b'))
+    			    .tickArguments([d3.timeMonth.every(1)]);
+
+    fixed_axis_svg.select('.x-axis')
+                  .call(xAxis);
+
+    graphic.select('svg')
+           .select('g')
+           .attr('width', x_width)
+           .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
+
+    createAnnotations(current_index);
+
+    scroller.resize();
+  }
 
 	// generic window resize listener event - need to make
 	// scrollama event handlers
@@ -281,6 +320,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// swap out tweets
 		showTweet(index);
+
 	}
 
 	// fix sticky graphic when enter container
@@ -303,6 +343,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 	function init () {
 		// 1. force a resize on load to ensure proper dimensions are sent to scrollama
+		handleResize();
 		// 2. setup the scroller passing options
 		// this will also initialize trigger observations
 		// 3. bind scrollama event handlers (this can be chained like below)
@@ -318,6 +359,8 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			.onContainerEnter(handleContainerEnter)
 			.onContainerExit(handleContainerExit);
 		// setup resize event
+
+    window.addEventListener('resize', handleResize);
 	}
 
 	// kick things off
@@ -389,15 +432,45 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	}
 
 	function showTweet (index) {
-		twttr.widgets.createTweet(
-			data[index].tweet_id, document.getElementById('tweet'),
-			{
-				conversation : 'none',    // or all
-				cards        : 'visible',  // or visible
-				linkColor    : '#cc0000', // default is blue
-				theme        : 'light'    // or dark
-			})
-	}
+
+    twttr.widgets.createTweet(
+        data[index].tweet_id, document.getElementById('tweet'),
+        {
+            conversation : 'none',    // or all
+            cards        : 'visible',  // or visible
+            linkColor    : '#cc0000', // default is blue
+            theme        : 'light'    // or dark
+        })
+    .then (function (el) {
+				twitter_widget = d3.select(el);
+				twitter_widget.style('display', 'none');
+        twitter_widget_width = parseInt(twitter_widget.style('width'), 10);
+				twitter_widget_height = parseInt(twitter_widget.style('height'), 10);
+
+				tweet_container = d3.select('#tweet');
+				tweet_container_width = parseInt(tweet_container.style('width'), 10);
+				tweet_container_height = parseInt(twitter_widget.style('height'), 10);
+
+				var width_ratio = twitter_widget_width / tweet_container_width;
+				var height_ratio = twitter_widget_height / tweet_container_height;
+
+				var heightOverWidth = height_ratio > width_ratio;
+
+				var ratio;
+
+				if (heightOverWidth) {
+					ratio = 1/ height_ratio;
+				} else {
+					ratio = 1/ width_ratio;
+				}
+
+				twitter_widget.style('width', ratio * tweet_container_width + "px");
+				twitter_widget.style('height', ratio * tweet_container_height + "px");
+				twitter_widget.style('display', null);
+
+    });
+
+  }
 
 	// update data from benchmarked to non-benchmarked
 	function changeData () {

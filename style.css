@@ -37,12 +37,6 @@ a, a:visited, a:hover {
 	text-align: center;
 }
 
-/* demo */
-#intro {
-	margin-bottom: 100px;
-}
-
-
 #outro {
 	height: 640px;
 }
@@ -86,9 +80,9 @@ a, a:visited, a:hover {
 .meme-name-container {
 	position:absolute;
 	font-family:'Mada';
-	top:50%;
+	top:90%;
 	left:15%;
-	width:35%;
+	width:30%;
 	background-color:white;
 	padding:10px;
 	border-radius:5px;
@@ -144,21 +138,36 @@ a, a:visited, a:hover {
 			font-size:20px;
 	}
 
-		.month {
+	.month {
 				font-size:20px;
-		}
+	}
+
+	.meme-name-container {
+		position:absolute;
+		font-family:'Mada';
+		top:90%;
+		left:15%;
+		width:35%;
+		background-color:white;
+		padding:10px;
+		border-radius:5px;
+	}
 }
 
 #tweet {
 	position:absolute;
 	left:55%;
-	top:50%;
-	width:35%;
+	top:90%;
+	width:25%;
+	height:20%;
+}
+
+twitterwidget {
+
 }
 
 .scroll__text {
 	position: relative;
-	padding: 0 1rem;
 	max-width: 30rem;
 	width: 33%;
 }
@@ -172,8 +181,8 @@ a, a:visited, a:hover {
 .joyplot-container {
 	position:absolute;
 	top:0;
-	width:100%;
-	left:0;
+	width:80%;
+	left:10%;
 }
 
 svg {
