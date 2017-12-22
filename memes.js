@@ -114,11 +114,13 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		}
 	}
 
-	// for each meme, find assign it the proper tweet_id
-	function getTweetId (d) {
+	var tweet_ids = [];
+
+	// for each meme, push its tweet id to array
+	function findTweetIds (d) {
 		for (var i in d) {
 			var tweet_id = d[i].values[0].tweet_id;
-			d[i].tweet_id = tweet_id;
+			tweet_ids.push(tweet_id);
 		}
 	}
 
@@ -126,7 +128,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	findPeaks(data);
 
 	// run getTweetId function on our dataset
-	getTweetId(data);
+	findTweetIds(data);
 
 	// sort memes by peak time
 	data.sort(function (a, b) { return a.peakTime - b.peakTime; });
@@ -210,6 +212,8 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
   });
 
 	var graphic = container.select('.scroll__graphic');
+	graphic.style('height', windowHeight + 'px');
+
 	var text = container.select('.scroll__text');
 	var step = text.selectAll('.step');
 
@@ -238,9 +242,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
     fixed_axis_svg.select('.x-axis')
                   .call(xAxis);
 
+		graphic.style('height', windowHeight + 'px')
+
     graphic.select('svg')
            .select('g')
-           .attr('width', x_width)
+           .style('width', x_width)
            .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
 
     createAnnotations(current_index);
@@ -318,8 +324,9 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// create annotations
 		createAnnotations(index);
 
-		// swap out tweets
-		showTweet(index);
+		// create tweets
+		d3.select('.meme-name-container').select('.current-tweet').remove();
+		grabTweet(index);
 
 	}
 
@@ -352,7 +359,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			graphic: '.scroll__graphic',
 			text: '.scroll__text',
 			step: '.scroll__text .step',
-			debug: true,
+			debug: false,
 			offset: 0.85
 		})
 			.onStepEnter(handleStepEnter)
@@ -431,46 +438,72 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		.call(makeAnnotations);
 	}
 
-	function showTweet (index) {
+	function createAllTweets() {
+		var tweetNumber = tweet_ids.length;
+		var percentageIncrement = 100 / tweetNumber;
 
-    twttr.widgets.createTweet(
-        data[index].tweet_id, document.getElementById('tweet'),
-        {
-            conversation : 'none',    // or all
-            cards        : 'visible',  // or visible
-            linkColor    : '#cc0000', // default is blue
-            theme        : 'light'    // or dark
-        })
-    .then (function (el) {
-				twitter_widget = d3.select(el);
-				twitter_widget.style('display', 'none');
-        twitter_widget_width = parseInt(twitter_widget.style('width'), 10);
-				twitter_widget_height = parseInt(twitter_widget.style('height'), 10);
+		for (i in tweet_ids) {
+			tweet_storage = d3.select('#tweet-storage');
+			var id = 'tweet-' + i;
+			tweet_storage.append('div').attr('id', id).attr('class', 'current-tweet');
 
-				tweet_container = d3.select('#tweet');
-				tweet_container_width = parseInt(tweet_container.style('width'), 10);
-				tweet_container_height = parseInt(twitter_widget.style('height'), 10);
+			twttr.widgets.createTweet(
+	        tweet_ids[i], document.getElementById(id), {
+	            conversation : 'none',    // or all
+	            cards        : 'visible',  // or visible
+	            linkColor    : '#cc0000', // default is blue
+	            theme        : 'light'    // or dark
+	        }
+			);
 
-				var width_ratio = twitter_widget_width / tweet_container_width;
-				var height_ratio = twitter_widget_height / tweet_container_height;
+			indexPlusOne = parseInt(i) + 1;
+			console.log(indexPlusOne);
+			console.log(percentageIncrement);
+			d3.select('.loading-percentage').text(Math.round(indexPlusOne * percentageIncrement));
 
-				var heightOverWidth = height_ratio > width_ratio;
+		}
+	}
 
-				var ratio;
+	createAllTweets();
 
-				if (heightOverWidth) {
-					ratio = 1/ height_ratio;
-				} else {
-					ratio = 1/ width_ratio;
-				}
+	function grabTweet(index) {
+		var id = '#tweet-' + index;
 
-				twitter_widget.style('width', ratio * tweet_container_width + "px");
-				twitter_widget.style('height', ratio * tweet_container_height + "px");
-				twitter_widget.style('display', null);
+		var cached_tweet = d3.select(id);
 
-    });
+		var visible_tweet = d3.select('#tweet').append(function() {
+														return cached_tweet.node();
+												});
 
-  }
+		sizeTweet(visible_tweet);
+
+	}
+
+	function sizeTweet(tweet) {
+		twitter_widget_width = parseInt(tweet.style('width'), 10);
+		twitter_widget_height = parseInt(tweet.style('height'), 10);
+
+		tweet_container = d3.select('#tweet');
+		tweet_container_width = parseInt(tweet_container.style('width'), 10);
+		tweet_container_height = parseInt(tweet_container.style('height'), 10);
+
+		var width_ratio = twitter_widget_width / tweet_container_width;
+		var height_ratio = twitter_widget_height / tweet_container_height;
+
+		var heightOverWidth = height_ratio > width_ratio;
+
+		var ratio;
+
+		if (heightOverWidth) {
+			ratio = 1 / height_ratio;
+		} else {
+			ratio = 1 / width_ratio;
+		}
+
+		tweet.style('width', ratio * twitter_widget_width + "px");
+		tweet.style('height', ratio * twitter_widget_height + "px");
+	}
+
 
 	// update data from benchmarked to non-benchmarked
 	function changeData () {
