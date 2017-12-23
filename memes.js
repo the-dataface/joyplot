@@ -114,9 +114,8 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		}
 	}
 
-	var tweet_ids = [];
-
 	// for each meme, push its tweet id to array
+	var tweet_ids = [];
 	function findTweetIds (d) {
 		for (var i in d) {
 			var tweet_id = d[i].values[0].tweet_id;
@@ -152,7 +151,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	// set step container to be height of svg and start at first joyplot
 	d3.select('.scroll__text')
 		.style('height', function () {
-			return svg_height + margin.top + margin.bottom + 'px';
+			return svg_container_height - margin.bottom + 'px';
 	})
 		.style('top', function () {
 			return margin.top - nameScale.bandwidth() + 'px';
@@ -170,7 +169,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
   				return nameScale.bandwidth() * (counter + 1) + (nameScale.bandwidth() * overlap) + 'px';
   		})
   			.style('height', function () {
-  				return nameScale.bandwidth() + 'px';
+  				return '300px';
   		});
 
     counter++;
@@ -208,7 +207,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	// set variables for each container we have, and also set the scroll container to be height of svg
 	var container = d3.select('#scroll');
 	container.style('height', function () {
-		return svg_height + 'px';
+		return svg_container_height + 'px';
   });
 
 	var graphic = container.select('.scroll__graphic');
@@ -258,16 +257,12 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	// scrollama event handlers
 	function handleStepEnter (response) {
 		// response = { element, direction, index }
-		// remove previous annotation
+		// remove previous annotation and previous tweet
 		d3.selectAll('.annotation-group').remove();
-
-		// set opacity back to 1s
-		d3.select('g.names')
-			.selectAll('g')
-			.attr('opacity', '1');
+		d3.select('.current-tweet').remove();
 
 		// set some variables
-		var index, direction, name, peakTime, peakMentions;
+		var index, direction, name, nameNoSpace, peakTime, peakMentions;
 
 		// not in use right now
 		direction = response.direction;
@@ -278,11 +273,14 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// name, peak time, and peak mentions for the meme we're on
 		name = data[index].key;
+		nameNoSpace = cleanString(name);
+
 		peakTime = data[index].peakTime;
 		peakMentions = data[index].peakMentions;
 
-    graphic.select('#tweet').remove()
-		graphic.append('div').attr('id','tweet');
+		// moves cute little red circle
+		d3.select('.date-circle')
+			.attr('cx', xScale(peakTime));
 
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
 		if (month_numerical(peakTime) >= 7) {
@@ -293,39 +291,33 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			graphic.select('.meme-name-container').style('left', '15%');
 		}
 
-		// moves cute little red circle
-		d3.select('.date-circle')
-			.attr('cx', xScale(peakTime));
-
 		// change to current meme name
-		d3.select('.meme-name')
+		graphic.select('.meme-name')
 			.text(name);
 
 		// change to current meme peak month
-		d3.select('.month')
+		graphic.select('.month')
 			.text(month_full_text(peakTime));
-
-		var nameNoSpace = cleanString(name);
 
 		// set opacity for all joyplots to .1, and then set the opacity for the joyplot we're on to 1
 		d3.select('g.names')
 			.selectAll('g')
-			.attr('opacity', '.1')
+			.attr('opacity', '1')
 			.filter(function () {
 			var className = 'name--' + nameNoSpace;
 			if (d3.select(this).attr('class') == className) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
 		})
-			.attr('opacity', '1');
+			.attr('opacity', '.1');
 
 		// create annotations
-		createAnnotations(index);
+		createAnnotations(nameNoSpace, peakMentions, peakTime);
 
+		console.log(index);
 		// create tweets
-		d3.select('.meme-name-container').select('.current-tweet').remove();
 		grabTweet(index);
 
 	}
@@ -397,12 +389,9 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 
 	// create annotations
-	function createAnnotations (index) {
+	function createAnnotations (name, peakMentions, peakTime) {
 		// remove any existing annotations
 		d3.selectAll('.annotation-group').remove();
-		var name = data[index].key;
-		var peakTime = data[index].peakTime;
-		var peakMentions = data[index].peakMentions;
 
 		const type = d3.annotationCallout;
 		const annotations = [{
@@ -430,12 +419,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 								})
 						.annotations(annotations);
 
-    var nameNoSpace = cleanString(name);
-	// using name, find the joyplot group that has that name as its class name and create annotation for it
-	d3.select('g.name--' + nameNoSpace)
-		.append('g')
-		.attr('class', 'annotation-group')
-		.call(makeAnnotations);
+		// using name, find the joyplot group that has that name as its class name and create annotation for it
+		d3.select('g.name--' + name)
+			.append('g')
+			.attr('class', 'annotation-group')
+			.call(makeAnnotations);
 	}
 
 	function createAllTweets() {

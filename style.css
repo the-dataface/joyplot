@@ -83,7 +83,7 @@ a, a:visited, a:hover {
 	font-family:'Mada';
 	top:10%;
 	left:15%;
-	width:30%;
+	max-width:30%;
 	background-color:white;
 	padding:10px;
 	border-radius:5px;
