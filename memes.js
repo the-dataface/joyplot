@@ -4,7 +4,7 @@ var windowHeight = window.innerHeight;
 left_margin = windowWidth * .1;
 
 // set margins - need to make dynamic eventually
-var margin = { top: 500, bottom: 1000};
+var margin = { top: 500, bottom: 400};
 
 // percent two area charts can overlap
 var overlap = 0.5;
@@ -17,8 +17,9 @@ joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
 // create svg with margins
 var svg = d3.select('.joyplot-container')
 			.append('svg')
-        .attr('width', '100%')
-        .attr('height', svg_container_height)
+        .attr('viewBox', '0, 0, ' + joyplot_width + ", " + svg_container_height)
+				.attr('width', '100%')
+				.attr('height', svg_container_height)
         .attr("preserveAspectRatio", "none")
 			.append('g')
 			  .attr('transform', 'translate(0,' + margin.top + ')');
@@ -41,7 +42,7 @@ var xScale = d3.scaleTime().range([0, joyplot_width]);
 var xValue = function (d) { return xScale(x(d)); };
 var xAxis = d3.axisBottom(xScale)
 			  .tickFormat(d3.timeFormat('%b'))
-			  .tickArguments([d3.timeMonth.every(1)]);
+				.tickSizeOuter([0]);
 
 // functions for finding y values
 var y = function (d) { return d.mentions; };
@@ -57,6 +58,8 @@ var nameValue = function (d) { return nameScale(nameCalc(d)); };
 var current_index = 0;
 // global variable to keep track of whether we're using benchmarked data or not
 var benchmarked = true;
+
+var started = false;
 
 // creates joyplot curve
 var area = d3.area()
@@ -167,10 +170,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
   			.attr('class', 'step')
   			.style('top', function () {
   				return nameScale.bandwidth() * (counter + 1) + (nameScale.bandwidth() * overlap) + 'px';
-  		})
-  			.style('height', function () {
-  				return '300px';
-  		});
+  			});
 
     counter++;
     }
@@ -223,20 +223,20 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
   function handleResize() {
     windowHeight = window.innerHeight;
     windowWidth = window.innerWidth;
-
-    x_width = windowWidth * .8;
+    width = windowWidth * .8;
     left_margin = windowWidth * .1;
 
-		d3.select('twitterwidget')
-			.style('width', '100%');
+		step.style('height', '300px');
 
     d3.select('.joyplot-container')
-      .style('width', x_width);
+        .style('width', width)
+			.select('svg')
+				.attr('width', width);
 
-    xScale.range([0, x_width]);
+    xScale.range([0, width]);
     xAxis = d3.axisBottom(xScale)
-    			    .tickFormat(d3.timeFormat('%b'))
-    			    .tickArguments([d3.timeMonth.every(1)]);
+							.tickFormat(d3.timeFormat('%b'))
+							.tickSizeOuter([0]);
 
     fixed_axis_svg.select('.x-axis')
                   .call(xAxis);
@@ -245,7 +245,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
     graphic.select('svg')
            .select('g')
-           .style('width', x_width)
+           .style('width', width)
            .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
 
     createAnnotations(current_index);
@@ -258,8 +258,19 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	function handleStepEnter (response) {
 		// response = { element, direction, index }
 		// remove previous annotation and previous tweet
-		d3.selectAll('.annotation-group').remove();
-		d3.select('.current-tweet').remove();
+
+		if (started) {
+			d3.selectAll('.annotation-group').remove();
+
+			previous_tweet = d3.select('.current-tweet');
+
+			d3.select('#tweet-storage')
+				.append(function() {
+						return previous_tweet.node();
+				});
+		} else {
+			started = true;
+		}
 
 		// set some variables
 		var index, direction, name, nameNoSpace, peakTime, peakMentions;
@@ -316,7 +327,6 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// create annotations
 		createAnnotations(nameNoSpace, peakMentions, peakTime);
 
-		console.log(index);
 		// create tweets
 		grabTweet(index);
 
@@ -336,6 +346,10 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// response = { direction }
 		// old school
 		// un-sticky the graphic, and pin to top/bottom of container
+		d3.select('g.names')
+			.selectAll('g')
+			.attr('opacity', '.1');
+
 		graphic.classed('is-fixed', false);
 		graphic.classed('is-bottom', response.direction === 'down');
 	}
@@ -417,13 +431,23 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 									date: d => xScale.invert(d.x),
 									close: d => yScale.invert(d.y)
 								})
-						.annotations(annotations);
+								.annotations(annotations);
 
 		// using name, find the joyplot group that has that name as its class name and create annotation for it
 		d3.select('g.name--' + name)
 			.append('g')
 			.attr('class', 'annotation-group')
 			.call(makeAnnotations);
+
+		/*
+		d3.select('.joyplot-container')
+			.append('div')
+			.attr('class', 'test-annotations')
+			.style('position', 'absolute')
+			.style('top', yScale(peakMentions) + 'px')
+			.style('left', xScale(peakTime) + 'px')
+			.text('hi');
+		*/
 	}
 
 	function createAllTweets() {
@@ -433,8 +457,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		for (i in tweet_ids) {
 			tweet_storage = d3.select('#tweet-storage');
 			var id = 'tweet-' + i;
-			tweet_storage.append('div').attr('id', id).attr('class', 'current-tweet');
-
+			tweet_storage.append('div').attr('id', id);
 			twttr.widgets.createTweet(
 	        tweet_ids[i], document.getElementById(id), {
 	            conversation : 'none',    // or all
@@ -445,8 +468,6 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			);
 
 			indexPlusOne = parseInt(i) + 1;
-			console.log(indexPlusOne);
-			console.log(percentageIncrement);
 			d3.select('.loading-percentage').text(Math.round(indexPlusOne * percentageIncrement));
 
 		}
@@ -461,7 +482,8 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		var visible_tweet = d3.select('#tweet').append(function() {
 														return cached_tweet.node();
-												});
+												})
+												.attr('class', 'current-tweet');
 
 		sizeTweet(visible_tweet);
 
