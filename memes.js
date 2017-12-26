@@ -1,18 +1,18 @@
 // width of window
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
-left_margin = windowWidth * .1;
+var side_margin = windowWidth * .1;
 
 // set margins - need to make dynamic eventually
-var margin = { top: 500, bottom: 400};
+var margin = {left: side_margin, right: side_margin, top: 500, bottom: 400};
 
 // percent two area charts can overlap
 var overlap = 0.5;
 
 //svg container and svg transform value
-svg_container_height = 7000;
-svg_height = svg_container_height - margin.top - margin.bottom;
-joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
+var svg_container_height = 7000;
+var svg_height = svg_container_height - margin.top - margin.bottom;
+var joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
 
 // create svg with margins
 var svg = d3.select('.joyplot-container')
@@ -34,7 +34,7 @@ var fixed_axis_svg = d3.select('.scroll__graphic')
 										   .append('g')
 										     // transform 20px downwards so x-axis fits within svg so doesn't get cut off, otherwise top of axis would get cut off
 					               .attr('width', '80%')
-					               .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
+					               .attr('transform', 'translate(' + margin.left + ',' + 20 + ')');
 
 // functions for finding x values
 var x = function (d) { return d.date; };
@@ -56,8 +56,6 @@ var nameValue = function (d) { return nameScale(nameCalc(d)); };
 
 // global variable to store the meme we're currently on
 var current_index = 0;
-// global variable to keep track of whether we're using benchmarked data or not
-var benchmarked = true;
 
 var started = false;
 
@@ -226,12 +224,12 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
     width = windowWidth * .8;
     left_margin = windowWidth * .1;
 
-		step.style('height', '300px');
+    step.style('height', '120px');
 
     d3.select('.joyplot-container')
         .style('width', width)
-			.select('svg')
-				.attr('width', width);
+      .select('svg')
+        .attr('width', width);
 
     xScale.range([0, width]);
     xAxis = d3.axisBottom(xScale)
@@ -241,14 +239,17 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
     fixed_axis_svg.select('.x-axis')
                   .call(xAxis);
 
-		graphic.style('height', windowHeight + 'px')
+    graphic.style('height', windowHeight + 'px')
 
     graphic.select('svg')
            .select('g')
            .style('width', width)
            .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
+    
+	  
+	var values = getValues(current_index);
 
-    createAnnotations(current_index);
+    createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime);
 
     scroller.resize();
   }
@@ -273,49 +274,43 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		}
 
 		// set some variables
-		var index, direction, name, nameNoSpace, peakTime, peakMentions;
+		var index, direction;
 
 		// not in use right now
 		direction = response.direction;
-
-		// index of step matches index of corresponding joyplot in dataset
-		index = response.index;
+        
+        index = response.index;
 		current_index = index;
-
-		// name, peak time, and peak mentions for the meme we're on
-		name = data[index].key;
-		nameNoSpace = cleanString(name);
-
-		peakTime = data[index].peakTime;
-		peakMentions = data[index].peakMentions;
+		
+		var values = getValues(index);
 
 		// moves cute little red circle
 		d3.select('.date-circle')
-			.attr('cx', xScale(peakTime));
+			.attr('cx', xScale(values.peakTime));
 
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
-		if (month_numerical(peakTime) >= 7) {
+		if (month_numerical(values.peakTime) >= 7) {
 			graphic.select('#tweet').style('left', '15%');
 			graphic.select('.meme-name-container').style('left', '55%');
-		} else if (month_numerical(peakTime) < 7) {
+		} else if (month_numerical(values.peakTime) < 7) {
 			graphic.select('#tweet').style('left', '55%');
 			graphic.select('.meme-name-container').style('left', '15%');
 		}
 
 		// change to current meme name
 		graphic.select('.meme-name')
-			.text(name);
+			.text(values.name);
 
 		// change to current meme peak month
 		graphic.select('.month')
-			.text(month_full_text(peakTime));
+			.text(month_full_text(values.peakTime));
 
 		// set opacity for all joyplots to .1, and then set the opacity for the joyplot we're on to 1
 		d3.select('g.names')
 			.selectAll('g')
 			.attr('opacity', '1')
 			.filter(function () {
-			var className = 'name--' + nameNoSpace;
+			var className = 'name--' + values.nameNoSpace;
 			if (d3.select(this).attr('class') == className) {
 				return false;
 			} else {
@@ -325,7 +320,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			.attr('opacity', '.1');
 
 		// create annotations
-		createAnnotations(nameNoSpace, peakMentions, peakTime);
+		createAnnotations(index, values.nameNoSpace, values.peakMentions, values.peakTime);
 
 		// create tweets
 		grabTweet(index);
@@ -352,6 +347,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		graphic.classed('is-fixed', false);
 		graphic.classed('is-bottom', response.direction === 'down');
+        d3.selectAll('.peak-annotation').remove();
 	}
 
 	function init () {
@@ -366,7 +362,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			text: '.scroll__text',
 			step: '.scroll__text .step',
 			debug: false,
-			offset: 0.85
+			offset: 0.75
 		})
 			.onStepEnter(handleStepEnter)
 			.onContainerEnter(handleContainerEnter)
@@ -394,60 +390,43 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		.transition();
 
 	// update data from benchmarked to not benchmarked
-	d3.select('.change-data-button')
+	d3.selectAll('.change-data-button')
 		.on('click', function () {
-		changeData();
+			d3.selectAll('.change-data-button').classed('change-data-button-selected', false)
+		
+			var thisButton = d3.select(this);
+		
+			thisButton.classed('change-data-button-selected', true);
+		
+			var buttonIdentifier = thisButton.attr('id');
+			console.log(buttonIdentifier);
+			var benchmarked;
+			if (buttonIdentifier == 'change-button-not-benchmarked') {
+				benchmarked = false;
+			} else {
+				benchmarked = true;
+			}
+			changeData(benchmarked);
+			
+			var values = getValues(current_index);
 
-		createAnnotations(current_index);
-	});
+			createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime);
+		});
 
 
 	// create annotations
-	function createAnnotations (name, peakMentions, peakTime) {
+	function createAnnotations (index, name, peakMentions, peakTime) {
 		// remove any existing annotations
-		d3.selectAll('.annotation-group').remove();
-
-		const type = d3.annotationCallout;
-		const annotations = [{
-			note: {
-				title: 'Index of ' + peakMentions
-			},
-
-			// can use x, y directly instead of data
-			data: { date: peakTime, mentions: peakMentions},
-			dy: -25,
-			dx: 25
-		}];
-
-    const makeAnnotations = d3.annotation()
-								.type(type)
-								// accessors & accessorsInverse not needed
-								// if using x, y in annotations JSON
-								.accessors({
-									x: d => xScale(d.date),
-									y: d => yScale(d.mentions)
-								})
-								.accessorsInverse({
-									date: d => xScale.invert(d.x),
-									close: d => yScale.invert(d.y)
-								})
-								.annotations(annotations);
-
-		// using name, find the joyplot group that has that name as its class name and create annotation for it
-		d3.select('g.name--' + name)
-			.append('g')
-			.attr('class', 'annotation-group')
-			.call(makeAnnotations);
-
-		/*
-		d3.select('.joyplot-container')
-			.append('div')
-			.attr('class', 'test-annotations')
+        
+        d3.selectAll('.peak-annotation').remove();
+        
+        d3.select('.joyplot-container')
+          .append('div')
+			.attr('class', 'peak-annotation')
 			.style('position', 'absolute')
-			.style('top', yScale(peakMentions) + 'px')
-			.style('left', xScale(peakTime) + 'px')
-			.text('hi');
-		*/
+			.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 35 + 'px')
+			.style('left', xScale(peakTime) - 50 + 'px')
+			.text('Index of ' + peakMentions);
 	}
 
 	function createAllTweets() {
@@ -516,21 +495,19 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 
 	// update data from benchmarked to non-benchmarked
-	function changeData () {
+	function changeData (benchmarked) {
 		// update y function to look at benchmarked_mentions instead of normal mentions
 		if (benchmarked) {
 			y = function (d) { return d.benchmarked_mentions; };
 			yScale.domain([0, d3.max(dataset, function (d) {
 				return d.benchmarked_mentions;
 			})]);
-			benchmarked = false;
 
 		} else {
 			y = function (d) { return d.mentions; };
 			yScale.domain([0, d3.max(dataset, function (d) {
 				return d.mentions;
 			})]);
-			benchmarked = true;
 		}
 
 		// update area calculation with new y scale
@@ -549,7 +526,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		findPeaks(data);
 
 		// update x scale and name scale
-		xScale.domain(d3.extent(dataset, x));
+		//xScale.domain(d3.extent(dataset, x));
 		nameScale.domain(data.map(function (d) { return d.key; }));
 
 		// update data for area/line charts based on new data values
@@ -564,5 +541,25 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			.transition()
 			.duration(1200)
 			.attr('d', line);
+        
+        var svg = d3.select('.joyplot-container')
+                .select('svg')
+                .attr('viewBox', '0, 0, ' + width + ", " + svg_container_height)
+                .attr('width', '100%');
 	}
+    
+    function getValues(index) {
+		var name, nameNoSpace, peakTime, peakMentions;
+
+		name = data[index].key;
+		nameNoSpace = cleanString(name);
+
+		peakTime = data[index].peakTime;
+		peakMentions = data[index].peakMentions;
+        
+        var values = {name: name, nameNoSpace: nameNoSpace, peakTime: peakTime, peakMentions: peakMentions};
+        
+        return values;
+        
+    }
 });

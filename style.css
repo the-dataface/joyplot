@@ -70,12 +70,27 @@ a, a:visited, a:hover {
 	top: auto;
 }
 
-.change-data-button {
-	width:150px;
-	height:10px;
+.change-data-button-container {
+	width:500px;
 	margin: 0 auto;
-	font-weight:700;
+	text-align: center;
+}
+
+.change-data-button {
+	font-weight:200;
 	cursor:pointer;
+	padding: 0px 8px;
+	border: 1px solid #aaa;
+	font-size: 14px;
+	border-radius: 2px;
+	display:inline-block;
+	width:200px;
+	text-align:center;
+}
+
+.change-data-button-selected {
+	background-color: #F5F5F5;
+	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 
 .meme-name-container {
@@ -200,9 +215,59 @@ svg {
 	fill: #448cab;
 }
 
-.annotation text {
-	fill: black;
+.peak-annotation {
+    text-align:center;
+    line-height:5px;
+    font-family:'Mada';
+    font-weight:200;
+    border:1px solid #aaa;
+    background-color:white;
+    padding:10px;
+    padding-bottom:15px;
+    position:relative;
+    height: 25px;
+    font-size:14px;
+    width:100px;
+    color:black;
 }
+
+.peak-annotation:after {
+    display: block;
+    content: ' ';
+    background: #fff;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+    border-top-right-radius: 2px;
+    position: absolute;
+    top:80%;
+    left:43px;
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+
+@media only screen and (min-width : 1000px) {
+	.peak-annotation {
+	}
+
+}
+
+@media only screen and (min-width : 764px) and (max-width: 999px) {
+	.peak-annotation {
+		font-size: 16px;
+	}
+}
+
+@media only screen and (max-width: 763px) {
+	.peak-annotation {
+		font-size: 14px;
+	}
+}
+
 
 #tweet-storage {
 	display:none;
