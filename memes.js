@@ -1,16 +1,23 @@
 // width of window
 var windowWidth = window.innerWidth;
+var screenWidth = screen.width;
 var windowHeight = window.innerHeight;
 var side_margin = windowWidth * .1;
+var top_margin = windowHeight * .7;
 
 // set margins - need to make dynamic eventually
-var margin = {left: side_margin, right: side_margin, top: 500, bottom: 400};
+var margin = {left: side_margin, right: side_margin, top: top_margin, bottom: 400};
 
 // percent two area charts can overlap
 var overlap = 0.5;
 
 //svg container and svg transform value
-var svg_container_height = 7000;
+if (screenWidth < 763 || windowWidth < 763) {
+	var svg_container_height = 4000;
+} else {
+	var svg_container_height = 7000;
+}
+
 var svg_height = svg_container_height - margin.top - margin.bottom;
 var joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
 
@@ -172,7 +179,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
     counter++;
     }
-	}
+  }
 
   createSteps();
 
@@ -206,7 +213,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	var container = d3.select('#scroll');
 	container.style('height', function () {
 		return svg_container_height + 'px';
-  });
+  	});
 
 	var graphic = container.select('.scroll__graphic');
 	graphic.style('height', windowHeight + 'px');
@@ -288,15 +295,6 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		d3.select('.date-circle')
 			.attr('cx', xScale(values.peakTime));
 
-		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
-		if (month_numerical(values.peakTime) >= 7) {
-			graphic.select('#tweet').style('left', '15%');
-			graphic.select('.meme-name-container').style('left', '55%');
-		} else if (month_numerical(values.peakTime) < 7) {
-			graphic.select('#tweet').style('left', '55%');
-			graphic.select('.meme-name-container').style('left', '15%');
-		}
-
 		// change to current meme name
 		graphic.select('.meme-name')
 			.text(values.name);
@@ -324,6 +322,8 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// create tweets
 		grabTweet(index);
+		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
+		setMemeLocationSize(values.peakTime);
 
 	}
 
@@ -356,13 +356,23 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// 2. setup the scroller passing options
 		// this will also initialize trigger observations
 		// 3. bind scrollama event handlers (this can be chained like below)
+		
+		var screenWidth = screen.width;
+		var windowWidth = window.innerWidth;
+		var offsetPct;
+		
+		if (screenWidth < 763 || windowWidth < 763) {
+			offsetPct = .9;
+		} else {
+			offsetPct = .8;
+		}
 		scroller.setup({
 			container: '#scroll',
 			graphic: '.scroll__graphic',
 			text: '.scroll__text',
 			step: '.scroll__text .step',
 			debug: false,
-			offset: 0.75
+			offset: offsetPct
 		})
 			.onStepEnter(handleStepEnter)
 			.onContainerEnter(handleContainerEnter)
@@ -399,7 +409,6 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			thisButton.classed('change-data-button-selected', true);
 		
 			var buttonIdentifier = thisButton.attr('id');
-			console.log(buttonIdentifier);
 			var benchmarked;
 			if (buttonIdentifier == 'change-button-not-benchmarked') {
 				benchmarked = false;
@@ -419,14 +428,38 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// remove any existing annotations
         
         d3.selectAll('.peak-annotation').remove();
+		
+		//use this to determine triangle location. since month 7 is starting point 
+		//for when tweet is on left side, offset that to be month 1
+		var peakMonth = month_numerical(peakTime);
+		var monthOffset = peakMonth;
+		if (peakMonth >= 7) {
+			monthOffset = peakMonth - 6;
+		}
+		// annotation is 100px wide. triangle is 14px wide. 6 months total. 
+		// 6 * 14 = 84. then there can be 1px between triange location, so 
+		// 84 + 14 = 98. 1px offset on either side to make 100px.
+		var annotationWidth = 100;
+		var triangleWidth = 14;
+		var endsOffset = 8;
+		
+		var triangleOffset = endsOffset + (triangleWidth * (monthOffset - 1));
         
         d3.select('.joyplot-container')
           .append('div')
 			.attr('class', 'peak-annotation')
 			.style('position', 'absolute')
 			.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 35 + 'px')
-			.style('left', xScale(peakTime) - 50 + 'px')
-			.text('Index of ' + peakMentions);
+			.style('left', xScale(peakTime) - triangleOffset - 7 + 'px')
+			.text('Index of ' + peakMentions)
+			.transition()
+			.delay(3000);
+		
+		d3.select('.peak-annotation')
+		  .append('div')
+		  .attr('class', 'annotation-triangle')
+		  .style('left', triangleOffset + 'px');
+	
 	}
 
 	function createAllTweets() {
@@ -469,28 +502,34 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	}
 
 	function sizeTweet(tweet) {
-		twitter_widget_width = parseInt(tweet.style('width'), 10);
-		twitter_widget_height = parseInt(tweet.style('height'), 10);
+		twitterWidgetWidth = parseInt(tweet.style('width'), 10);
+		twitterWidgetHeight = parseInt(tweet.style('height'), 10);
+		var twitterWidgetRatio = twitterWidgetWidth / twitterWidgetHeight;
 
-		tweet_container = d3.select('#tweet');
-		tweet_container_width = parseInt(tweet_container.style('width'), 10);
-		tweet_container_height = parseInt(tweet_container.style('height'), 10);
-
-		var width_ratio = twitter_widget_width / tweet_container_width;
-		var height_ratio = twitter_widget_height / tweet_container_height;
-
-		var heightOverWidth = height_ratio > width_ratio;
-
-		var ratio;
-
-		if (heightOverWidth) {
-			ratio = 1 / height_ratio;
+		tweetContainer = d3.select('#tweet');
+		tweetContainerWidth = parseInt(tweetContainer.style('width'), 10);
+		tweetContainerHeight = parseInt(tweetContainer.style('height'), 10);
+		
+		var screenHeight = window.innerHeight;
+		var bigScreenTweetHeight = screenHeight * .3;
+		var smallScreenTweetHeight = screenHeight * .1;
+		
+		var bigScreenHeightRatio = bigScreenTweetHeight / twitterWidgetHeight;
+		var smallScreenHeightRatio = smallScreenTweetHeight / twitterWidgetHeight;
+		
+		
+		var screenWidth = screen.width;
+		var windowWidth = window.innerWidth;
+		if (screenWidth < 763 || windowWidth < 763) {
+			tweet.style('width', twitterWidgetWidth * smallScreenHeightRatio +  "px");
 		} else {
-			ratio = 1 / width_ratio;
+			if (twitterWidgetWidth * bigScreenHeightRatio < windowWidth * .3) {
+				tweet.style('width', twitterWidgetWidth * bigScreenHeightRatio +  "px");
+			} else {
+				tweet.style('width', windowWidth * .3 + "px");
+			}
 		}
-
-		tweet.style('width', ratio * twitter_widget_width + "px");
-		tweet.style('height', ratio * twitter_widget_height + "px");
+		
 	}
 
 
@@ -562,4 +601,40 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
         return values;
         
     }
+	
+	function setMemeLocationSize(peakTime) {
+		
+		var screenWidth = screen.width;
+		var windowWidth = window.innerWidth;
+		var memeNameContainer = graphic.select('.meme-name-container');
+		var tweetContainer = graphic.select('#tweet')
+		
+		if (screenWidth < 763 || windowWidth < 763) {
+			memeNameContainer.style('left', '15%');
+			memeNameContainer.style('max-width', '70%');
+			
+			var memeNameHeight = parseInt(graphic.select('.meme-name-container').style('height'), 10);
+			var memeNameOffset = parseInt(graphic.select('.meme-name-container').style('top'), 10);
+			var tweetHeight = memeNameHeight + memeNameOffset;
+
+			tweetContainer.style('left', '15%');
+			tweetContainer.style('top', tweetHeight + 'px');
+		} else {
+			var peakMonth = month_numerical(peakTime);
+			if (peakMonth >= 7) {
+				tweetContainer.style('left', '15%');
+				memeNameContainer.style('left', '55%');
+			} else if (peakMonth < 7) {
+				tweetContainer.style('left', '55%');
+				memeNameContainer.style('left', '15%');
+			}
+			memeNameContainer.style('max-width', '30%');
+			memeNameContainer.style('top', '10%');
+			
+			tweetContainer.style('top', '10%');
+			
+			
+			
+		}
+	}
 });

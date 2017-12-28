@@ -86,6 +86,7 @@ a, a:visited, a:hover {
 	display:inline-block;
 	width:200px;
 	text-align:center;
+	background-color:white;
 }
 
 .change-data-button-selected {
@@ -93,15 +94,22 @@ a, a:visited, a:hover {
 	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 
+@media only screen and (max-width: 763px) {
+	.change-data-button {
+		font-size: 12px;
+		display:inline-block;
+		width:150px;
+	}
+}
+
 .meme-name-container {
 	position:absolute;
 	font-family:'Mada';
-	top:10%;
 	left:15%;
-	max-width:30%;
 	background-color:white;
 	padding:10px;
 	border-radius:5px;
+	top:10%;
 }
 
 .meme-name {
@@ -132,30 +140,31 @@ a, a:visited, a:hover {
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
-		.meme-name {
-				font-size: 40px;
+	.meme-name {
+		font-size: 40px;
 	}
 
 	.meme-name-sub {
-			font-size:25px;
+		font-size:25px;
 	}
 
 	.month {
-			font-size:25px;
+		font-size:25px;
 	}
 }
 
 @media only screen and (max-width: 763px) {
+	
 	.meme-name {
-			font-size: 30px;
+		font-size: 30px;
 	}
 
 	.meme-name-sub {
-			font-size:20px;
+		font-size:20px;
 	}
 
 	.month {
-				font-size:20px;
+		font-size:20px;
 	}
 }
 
@@ -163,13 +172,9 @@ a, a:visited, a:hover {
 	position:absolute;
 	left:55%;
 	top:10%;
-	width:33%;
-	height:50%;
+	
 }
 
-twitterwidget {
-
-}
 
 .scroll__text {
 	position: relative;
@@ -188,6 +193,24 @@ twitterwidget {
 	top:0;
 	width:80%;
 	left:10%;
+}
+@media only screen and (min-width : 1000px) {
+	.joyplot-container {
+		width:80%;
+	}
+
+}
+
+@media only screen and (min-width : 764px) and (max-width: 999px) {
+	.joyplot-container {
+		width:80%;
+	}
+}
+
+@media only screen and (max-width: 763px) {
+	.joyplot-container {
+		width:80%;
+	}
 }
 
 svg {
@@ -231,7 +254,7 @@ svg {
     color:black;
 }
 
-.peak-annotation:after {
+.annotation-triangle {
     display: block;
     content: ' ';
     background: #fff;
@@ -241,8 +264,8 @@ svg {
     border-right: 1px solid #aaa;
     border-top-right-radius: 2px;
     position: absolute;
-    top:80%;
-    left:43px;
+    top:81%;
+    left:7px;
     -webkit-transform: rotate(135deg);
     -moz-transform: rotate(135deg);
     -o-transform: rotate(135deg);
