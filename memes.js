@@ -94,7 +94,7 @@ var rowConverter = function (d) {
 		date: parseTime(d.date),
 		mentions: +d.index,
 		benchmarked_mentions: +d.benchmarked_index,
-		tweet_id: d.tweet_id
+		tweet_id: d.twitter_id
   };
 };
 
