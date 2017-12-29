@@ -94,7 +94,7 @@ var rowConverter = function (d) {
 		date: parseTime(d.date),
 		mentions: +d.index,
 		benchmarked_mentions: +d.benchmarked_index,
-		tweet_id: d.twitter_id
+		tweet_id: d.tweet_id
   };
 };
 
@@ -130,15 +130,15 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			tweet_ids.push(tweet_id);
 		}
 	}
-
+	
 	// run findPeaks function on our dataset
 	findPeaks(data);
 
-	// run getTweetId function on our dataset
-	findTweetIds(data);
-
 	// sort memes by peak time
 	data.sort(function (a, b) { return a.peakTime - b.peakTime; });
+	
+	// run getTweetId function on our dataset
+	findTweetIds(data);
 
 	// set domain for x scale and name scale now that we have dataset ready to go
 	xScale.domain(d3.extent(dataset, x));
