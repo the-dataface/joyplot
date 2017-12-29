@@ -270,7 +270,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		if (started) {
 			d3.selectAll('.annotation-group').remove();
 
-			previous_tweet = d3.select('.current-tweet');
+			previous_tweet = d3.select('.current-tweet').classed('current-tweet', false);
 
 			d3.select('#tweet-storage')
 				.append(function() {
@@ -510,33 +510,41 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		*/
 		
 		var thisTweet = d3.select("#twitter-widget-" + index);
-		thisTweet.style('min-width', '200px');
+		thisTweet.style('min-width', '0px');
 		thisTweet.style('max-width', '1000px');
-		thisTweet.style('height', '300px');
-		thisTweet.style('width', '300px');
 		
-
-		sizeTweet(visible_tweet);
+		var mediaCard = thisTweet.select('iframe');
+		console.log(mediaCard);
+		
+		tweetWidth = parseInt(thisTweet.style('width'), 10);
+		tweetHeight = parseInt(thisTweet.style('height'), 10);
+		
+		
+		var newTweetWidth = sizeTweet(tweetWidth, tweetHeight);
+		
+		thisTweet.style('width', '300px');
 
 	}
 
-	function sizeTweet(tweet) {
-		twitterWidgetWidth = parseInt(tweet.style('width'), 10);
-		twitterWidgetHeight = parseInt(tweet.style('height'), 10);
-		var twitterWidgetRatio = twitterWidgetWidth / twitterWidgetHeight;
-
-		tweetContainer = d3.select('#tweet');
-		tweetContainerWidth = parseInt(tweetContainer.style('width'), 10);
-		tweetContainerHeight = parseInt(tweetContainer.style('height'), 10);
+	function sizeTweet(w, h) {
+		
+		var ratio = w / h;
 		
 		var screenHeight = window.innerHeight;
-		var bigScreenTweetHeight = screenHeight * .3;
-		var smallScreenTweetHeight = screenHeight * .1;
+		var screenWidth = window.innerWidth;
 		
-		var bigScreenHeightRatio = bigScreenTweetHeight / twitterWidgetHeight;
-		var smallScreenHeightRatio = smallScreenTweetHeight / twitterWidgetHeight;
+		var maxTweetHeight = screenHeight * .4;
+		var maxTweetWidth = screenWidth * .3;
 		
+		var tweetWidth = maxTweetHeight * ratio;
 		
+		if (tweetWidth > maxTweetWidth) {
+			return maxTweetWidth;
+		} else {
+			return tweetWidth;
+		}
+		
+		/*
 		var screenWidth = screen.width;
 		var windowWidth = window.innerWidth;
 		if (screenWidth < 763 || windowWidth < 763) {
@@ -548,6 +556,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 				tweet.style('width', windowWidth * .3 + "px");
 			}
 		}
+		*/
 		
 	}
 
