@@ -319,14 +319,14 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// create annotations
 		createAnnotations(index, values.nameNoSpace, values.peakMentions, values.peakTime);
-
+		
 		// create tweets
 		grabTweet(index);
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
 		setMemeLocationSize(values.peakTime);
-
 	}
-
+	
+	
 	// fix sticky graphic when enter container
 	function handleContainerEnter (response) {
 		// response = { direction }
@@ -492,10 +492,29 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		var cached_tweet = d3.select(id);
 
-		var visible_tweet = d3.select('#tweet').append(function() {
-														return cached_tweet.node();
-												})
-												.attr('class', 'current-tweet');
+		var visible_tweet = d3.select('#tweet')
+							  .append(function() {
+									return cached_tweet.node();
+							   })
+							  .attr('class', 'current-tweet');
+		
+		/*
+		var thisTweet = document.getElementById("twitter-widget-" + index);
+		var thisTweetBody = null;
+		
+		if (thisTweet) {
+			thisTweetBody = thisTweet.contentDocument;
+		}
+		
+		console.log(thisTweetBody);
+		*/
+		
+		var thisTweet = d3.select("#twitter-widget-" + index);
+		thisTweet.style('min-width', '200px');
+		thisTweet.style('max-width', '1000px');
+		thisTweet.style('height', '300px');
+		thisTweet.style('width', '300px');
+		
 
 		sizeTweet(visible_tweet);
 
