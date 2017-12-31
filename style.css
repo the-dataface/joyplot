@@ -32,15 +32,129 @@ a, a:visited, a:hover {
 }
 
 #intro {
-	max-width: 40rem;
 	margin: 0 auto;
 	text-align: center;
-	margin-bottom: 200px;
+	height:900px;
+	background-color:black;
+}
+
+.feature-image-container {
+	height:750px;
+	width:1050px;
+	margin: 0 auto;
+}
+.row {
+	width:100%;
+	height:20%;
+	float:left;
+}
+
+.center-row {
+	float:left
+	width:100%;
+	height:60%;
+}
+
+.center-row-side {
+	float:left;
+	width:28.4%;
+	height:100%;
+}
+
+.center-row-middle {
+	float:left;
+	width:42.6%;
+	height:100%;
+}
+
+.cell {
+	width:14.2%;
+	height:100%;
+    display: inline;
+    float: left;
+    margin: 0;
+    padding: 0;
+	position:relative;
+	overflow: hidden;
+}
+
+.side-cell {
+	width:50%;
+	height:33.3%;
+    display: inline;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.title-cell {
+	padding-top:80px;
+	width:100%;
+	height:100%;
+}
+
+.cell:hover img {
+	opacity:.2;
+	-webkit-transform:scale(1.2);
+	transform:scale(1.2);
+	-webkit-transition: 0.2s ease;
+ 	transition: 0.2s ease;
+}
+
+.meme-hover-text {
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	visibility:hidden;
+	font-weight:700;
+}
+
+.cell:hover .meme-hover-text {
+	visibility:visible;
+	-webkit-transition: 0.6s ease;
+ 	transition: 0.6s ease;
+}
+
+.header {
+	font-weight:700;
+	font-size: 100px;
+	color:white;
+}
+
+.line-break {
+	width: 30%;
+	margin: 0 auto;
+	margin-bottom:15px;
+	height:1px;
+	background-color:red;
+}
+
+.sub-header {
+	font-size:35px;
+	font-weight:200;
+	color:white;
+}
+
+.year-highlight {
+	color:red;
+	font-size:40px;
+	font-weight: 700;
+}
+
+.feature-image {
+	height:100%;
+	width:100%;
+}
+
+.break {
+	height:200px;
 }
 
 #outro {
 	height: 640px;
 }
+
 
 /* scrollama */
 #scroll {

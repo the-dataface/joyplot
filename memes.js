@@ -1,3 +1,20 @@
+
+/*d3.selectAll('.cell')
+  .on('mouseover', function () {
+	var thisCell = d3.select(this);
+	thisCell.select('img').style('opacity', '.3');
+	
+	thisCell.append('div').attr('class', 'hover-label').style('position', 'relative').text('hey');
+  })
+  .on('mouseout', function() {
+	var thisCell = d3.select(this);
+	thisCell.select('img').style('opacity', '1');
+	
+	thisCell.select('.hover-label').remove();
+  })
+*/
+
+
 // width of window
 var windowWidth = window.innerWidth;
 var screenWidth = screen.width;
@@ -464,7 +481,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 	function createAllTweets() {
 		var tweetNumber = tweet_ids.length;
-		var percentageIncrement = 100 / tweetNumber;
+		//var percentageIncrement = 100 / tweetNumber;
 
 		for (i in tweet_ids) {
 			tweet_storage = d3.select('#tweet-storage');
@@ -480,7 +497,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			);
 
 			indexPlusOne = parseInt(i) + 1;
-			d3.select('.loading-percentage').text(Math.round(indexPlusOne * percentageIncrement));
+			//d3.select('.loading-percentage').text(Math.round(indexPlusOne * percentageIncrement));
 
 		}
 	}
@@ -498,23 +515,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 							   })
 							  .attr('class', 'current-tweet');
 		
-		/*
-		var thisTweet = document.getElementById("twitter-widget-" + index);
-		var thisTweetBody = null;
-		
-		if (thisTweet) {
-			thisTweetBody = thisTweet.contentDocument;
-		}
-		
-		console.log(thisTweetBody);
-		*/
-		
 		var thisTweet = d3.select("#twitter-widget-" + index);
 		thisTweet.style('min-width', '0px');
 		thisTweet.style('max-width', '1000px');
 		
 		var mediaCard = thisTweet.select('iframe');
-		console.log(mediaCard);
 		
 		tweetWidth = parseInt(thisTweet.style('width'), 10);
 		tweetHeight = parseInt(thisTweet.style('height'), 10);
