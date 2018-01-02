@@ -51,9 +51,8 @@ var svg = d3.select('.joyplot-container')
 // create separate svg for fixed x-axis that will be in scrollytelling
 var fixed_axis_svg = d3.select('.scroll__graphic')
 					   .append('svg')
-					  		// put at the bottom of the screen
-					 		.attr('width', '100%')
-					 		.attr('height', '100px')
+					 	.attr('width', '100%')
+					 	.attr('height', '100px')
 					   .append('g');
 
 // functions for finding x values
@@ -459,22 +458,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// remove any existing annotations
         
         d3.selectAll('.peak-annotation').remove();
-		
-		//use this to determine triangle location. since month 7 is starting point 
-		//for when tweet is on left side, offset that to be month 1
-		var peakMonth = month_numerical(peakTime);
-		var monthOffset = peakMonth;
-		if (peakMonth >= 7) {
-			monthOffset = peakMonth - 6;
-		}
-		// annotation is 100px wide. triangle is 14px wide. 6 months total. 
-		// 6 * 14 = 84. then there can be 1px between triange location, so 
-		// 84 + 14 = 98. 1px offset on either side to make 100px.
-		var annotationWidth = 100;
-		var triangleWidth = 14;
-		var endsOffset = 8;
-		
-		var triangleOffset = endsOffset + (triangleWidth * (monthOffset - 1));
+		d3.selectAll('.benchmark-annotation').remove();
         
 		if (buttonPressed) {
 			var delay = 1300;
@@ -482,20 +466,49 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			var delay = 0;
 		}
 		
-        d3.select('.joyplot-container')
-          .append('div')
-			.attr('class', 'peak-annotation')
-			.style('position', 'absolute')
-			.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 35 + 'px')
-			.style('left', xScale(peakTime) - triangleOffset - 7 + 'px')
-			.style('visibility', 'hidden')
-			.text('Index of ' + peakMentions);
+		var annotation = d3.select('.joyplot-container')
+						   .append('div')
+							.attr('class', 'peak-annotation')
+							.style('position', 'absolute')
+							.style('visibility', 'hidden')
+							.text('This meme peaked in 2017 due to Cookie Monster tweeting out a picture of it after the Oscars. The internet got a hold of it and it shot up to the top charts of Imgur immediately. However, it fell out of popularity because Logal Paul used it, and he is a douche.');
+		
+		//use this to determine triangle location. since month 7 is starting point 
+		//for when tweet is on left side, offset that to be month 1
+		var peakMonth = month_numerical(peakTime);
+		var percentMonth = (peakMonth - 1) / 11;
+		
+		var annotationWidth = parseInt(d3.select('.peak-annotation').style('width'), 10);
+		var annotationHeight = parseInt(d3.select('.peak-annotation').style('height'), 10);
+		
+		var triangleWidth = 14;
+		var offsetAnnotationWidth = annotationWidth - (triangleWidth * 2);
+		var triangleOffset = triangleWidth + (offsetAnnotationWidth * percentMonth);
+		
+		annotationWidth = parseInt(d3.select('.peak-annotation').style('width'), 10);
+		
+		annotation.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 					annotationHeight - 10 + 'px')
+				  .style('left', xScale(peakTime) - triangleOffset - 7 + 'px');
 		
 		d3.select('.peak-annotation')
 		  .append('div')
 		  .attr('class', 'annotation-triangle')
 		  .style('visibility', 'hidden')
-		  .style('left', triangleOffset + 'px');
+		  .style('left', triangleOffset + 'px')
+		  .style('top', annotationHeight - 6 + 'px');
+		
+		if (benchmarked) {
+			var benchmarkValues = getValues(23);
+			d3.select('.joyplot-container')
+			  .append('div')
+				.attr('class', 'benchmark-annotation')
+				.style('position', 'absolute')
+				.text('United Airlines benchmark')
+				.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(benchmarkValues.peakMentions) + 'px')
+				.style('left', xScale(benchmarkValues.peakTime) + 'px')
+				.style('visibility', 'hidden');
+			
+		}
 		
 		d3.select('.peak-annotation')
 		  .transition()
@@ -506,7 +519,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		  .transition()
 		  .delay(delay)
 		  .style('visibility', 'visible');
-	
+		
+		d3.select('.benchmark-annotation')
+		  .transition()
+		  .delay(delay)
+		  .style('visibility', 'visible');
 	}
 
 	function createAllTweets() {

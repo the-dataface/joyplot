@@ -398,7 +398,6 @@ svg {
 
 .peak-annotation {
     text-align:center;
-    line-height:5px;
     font-family:'Mada';
     font-weight:700;
     border:1px solid white;
@@ -406,10 +405,10 @@ svg {
     padding:10px;
     padding-bottom:15px;
     position:relative;
-    height: 25px;
     font-size:14px;
-    width:100px;
     color:white;
+	max-width:50%;
+	border-radius:5px;
 }
 
 .annotation-triangle {
@@ -422,8 +421,6 @@ svg {
     border-right: 1px solid white;
     border-top-right-radius: 2px;
     position: absolute;
-    top:81%;
-    left:7px;
     -webkit-transform: rotate(135deg);
     -moz-transform: rotate(135deg);
     -o-transform: rotate(135deg);
@@ -449,7 +446,18 @@ svg {
 	}
 }
 
+.benchmark-annotation {
+	color:white;
+	-webkit-transform: translate(0%, -100%);
+    -moz-transform: translate(0%, -100%);
+    -o-transform: translate(0%, -100%);
+    -ms-transform: translate(0%, -100%);
+    transform: translate(0%, -100%);
+	font-style:italic;
+}
+
 
 #tweet-storage {
 	display:none;
 }
+
