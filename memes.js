@@ -32,7 +32,7 @@ var overlap = 0.5;
 if (screenWidth < 763 || windowWidth < 763) {
 	var svg_container_height = 4000;
 } else {
-	var svg_container_height = 7000;
+	var svg_container_height = 11000;
 }
 
 var svg_height = svg_container_height - margin.top - margin.bottom;
@@ -41,24 +41,20 @@ var joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
 // create svg with margins
 var svg = d3.select('.joyplot-container')
 			.append('svg')
-        .attr('viewBox', '0, 0, ' + joyplot_width + ", " + svg_container_height)
-				.attr('width', '100%')
+        		.attr('viewBox', '0, 0, ' + joyplot_width + ", " + svg_container_height)
+				.attr('width', joyplot_width)
 				.attr('height', svg_container_height)
-        .attr("preserveAspectRatio", "none")
+        		.attr("preserveAspectRatio", "none")
 			.append('g')
-			  .attr('transform', 'translate(0,' + margin.top + ')');
+			  	.attr('transform', 'translate(0,' + margin.top + ')');
 
 // create separate svg for fixed x-axis that will be in scrollytelling
 var fixed_axis_svg = d3.select('.scroll__graphic')
-											 .append('svg')
-										     .attr('width', '100%')
-										     // put at the bottom of the screen
-										     .attr('transform', 'translate(0,' + 10 + ')')
-										     .attr('height', '100px')
-										   .append('g')
-										     // transform 20px downwards so x-axis fits within svg so doesn't get cut off, otherwise top of axis would get cut off
-					               .attr('width', '80%')
-					               .attr('transform', 'translate(' + margin.left + ',' + 20 + ')');
+					   .append('svg')
+					  		// put at the bottom of the screen
+					 		.attr('width', '100%')
+					 		.attr('height', '100px')
+					   .append('g');
 
 // functions for finding x values
 var x = function (d) { return d.date; };
@@ -118,6 +114,8 @@ var rowConverter = function (d) {
 // import data from csv
 d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
 	if (error) { throw error; }
+	
+	var benchmarked = false;
 
 	// Sort all data by time
 	dataset.sort(function (a, b) { return a.date - b.date; });
@@ -192,7 +190,8 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
   			.attr('class', 'step')
   			.style('top', function () {
   				return nameScale.bandwidth() * (counter + 1) + (nameScale.bandwidth() * overlap) + 'px';
-  			});
+  			})
+			.style('height', '100px');
 
     counter++;
     }
@@ -243,14 +242,26 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
   //work in progress
   function handleResize() {
-    windowHeight = window.innerHeight;
-    windowWidth = window.innerWidth;
-    width = windowWidth * .8;
-    left_margin = windowWidth * .1;
-
-    step.style('height', '120px');
-
-    d3.select('.joyplot-container')
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+	var width;
+	var leftMargin;
+	var axisTopMargin;
+	var svgContainerHeight;
+	  
+	if (windowWidth > 763) {
+		width = windowWidth * .6;
+		leftMargin = windowWidth * .35;
+		axisTopMargin = windowHeight * .1;
+		svgContainerHeight = 11000;
+	} else {
+		width = windowWidth * .9;
+		leftMargin = windowWidth * .05;
+		axisTopMargin = windowHeight * .6;
+		svgContainerHeight = 4000;
+	}
+	  
+	d3.select('.joyplot-container')
         .style('width', width)
       .select('svg')
         .attr('width', width);
@@ -264,16 +275,16 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
                   .call(xAxis);
 
     graphic.style('height', windowHeight + 'px')
-
+	  
     graphic.select('svg')
+	  			.attr('transform', 'translate(0, ' + axisTopMargin + ')')
            .select('g')
-           .style('width', width)
-           .attr('transform', 'translate(' + left_margin + ',' + 20 + ')');
+           		.attr('transform', 'translate(' + leftMargin + ',' + 20 + ')');
     
 	  
 	var values = getValues(current_index);
 
-    createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime);
+    createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
 
     scroller.resize();
   }
@@ -323,19 +334,23 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// set opacity for all joyplots to .1, and then set the opacity for the joyplot we're on to 1
 		d3.select('g.names')
 			.selectAll('g')
-			.attr('opacity', '1')
-			.filter(function () {
-			var className = 'name--' + values.nameNoSpace;
-			if (d3.select(this).attr('class') == className) {
-				return false;
-			} else {
-				return true;
-			}
-		})
 			.attr('opacity', '.1');
+		
+		var className = 'name--' + values.nameNoSpace;
+		var thisJoyplot = d3.select('.' + className);
+		thisJoyplot.attr('opacity', '1');
+		
+		d3.selectAll('.benchmark-line').remove();
+		
+		if (benchmarked) {
+			thisJoyplot.append('path')
+				 .attr('class', 'benchmark-line')
+			     .datum(data[23].values)
+			     .attr('d', line);
+		}
 
 		// create annotations
-		createAnnotations(index, values.nameNoSpace, values.peakMentions, values.peakTime);
+		createAnnotations(index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
 		
 		// create tweets
 		grabTweet(index);
@@ -381,7 +396,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		if (screenWidth < 763 || windowWidth < 763) {
 			offsetPct = .9;
 		} else {
-			offsetPct = .8;
+			offsetPct = .7;
 		}
 		scroller.setup({
 			container: '#scroll',
@@ -426,7 +441,6 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			thisButton.classed('change-data-button-selected', true);
 		
 			var buttonIdentifier = thisButton.attr('id');
-			var benchmarked;
 			if (buttonIdentifier == 'change-button-not-benchmarked') {
 				benchmarked = false;
 			} else {
@@ -436,12 +450,12 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			
 			var values = getValues(current_index);
 
-			createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime);
+			createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, true);
 		});
 
 
 	// create annotations
-	function createAnnotations (index, name, peakMentions, peakTime) {
+	function createAnnotations (index, name, peakMentions, peakTime, buttonPressed) {
 		// remove any existing annotations
         
         d3.selectAll('.peak-annotation').remove();
@@ -462,20 +476,36 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		
 		var triangleOffset = endsOffset + (triangleWidth * (monthOffset - 1));
         
+		if (buttonPressed) {
+			var delay = 1300;
+		} else {
+			var delay = 0;
+		}
+		
         d3.select('.joyplot-container')
           .append('div')
 			.attr('class', 'peak-annotation')
 			.style('position', 'absolute')
 			.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 35 + 'px')
 			.style('left', xScale(peakTime) - triangleOffset - 7 + 'px')
-			.text('Index of ' + peakMentions)
-			.transition()
-			.delay(3000);
+			.style('visibility', 'hidden')
+			.text('Index of ' + peakMentions);
 		
 		d3.select('.peak-annotation')
 		  .append('div')
 		  .attr('class', 'annotation-triangle')
+		  .style('visibility', 'hidden')
 		  .style('left', triangleOffset + 'px');
+		
+		d3.select('.peak-annotation')
+		  .transition()
+		  .delay(delay)
+		  .style('visibility', 'visible');
+		
+		d3.select('.annotation-triangle')
+		  .transition()
+		  .delay(delay)
+		  .style('visibility', 'visible');
 	
 	}
 
@@ -493,11 +523,23 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	            cards        : 'visible',  // or visible
 	            linkColor    : '#cc0000', // default is blue
 	            theme        : 'light'    // or dark
-	        }
-			);
-
-			indexPlusOne = parseInt(i) + 1;
-			//d3.select('.loading-percentage').text(Math.round(indexPlusOne * percentageIncrement));
+	        }).then(function(r) {
+				d3.select(r).style('min-width', '0px');
+				d3.select(r).style('max-width', '1000px');
+				
+				var windowWidth = window.innerWidth;
+				var tweetWidth;
+				
+				if (windowWidth > 763) {
+					tweetWidth = windowWidth * .2;
+				} else {
+					tweetWidth = windowWidth * .4;
+				}
+				
+				d3.select(r).style('width', tweetWidth + 'px');
+			
+			});
+				
 
 		}
 	}
@@ -516,38 +558,56 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 							  .attr('class', 'current-tweet');
 		
 		var thisTweet = d3.select("#twitter-widget-" + index);
-		thisTweet.style('min-width', '0px');
-		thisTweet.style('max-width', '1000px');
 		
-		var mediaCard = thisTweet.select('iframe');
+		var windowWidth = window.innerWidth;
+		var tweetWidth;
 		
+		if (windowWidth > 763) {
+			tweetWidth = windowWidth * .2;
+		} else {
+			tweetWidth = windowWidth * .4;
+		}
+		
+		thisTweet.style('width', tweetWidth + 'px');
+		
+		/*
 		tweetWidth = parseInt(thisTweet.style('width'), 10);
 		tweetHeight = parseInt(thisTweet.style('height'), 10);
+		*/
 		
 		
-		var newTweetWidth = sizeTweet(tweetWidth, tweetHeight);
+		//var newTweetWidth = sizeTweet(tweetWidth, tweetHeight);
 		
-		thisTweet.style('width', '300px');
+		//thisTweet.style('width', newTweetWidth + 'px');
 
 	}
 
 	function sizeTweet(w, h) {
 		
-		var ratio = w / h;
+		var windowWidth = window.innerWidth;
+
+		if (windowWidth > 763) {
+			
+		} else {
+			
+		}
+		
+		/*var ratio = h / w;
 		
 		var screenHeight = window.innerHeight;
 		var screenWidth = window.innerWidth;
 		
-		var maxTweetHeight = screenHeight * .4;
-		var maxTweetWidth = screenWidth * .3;
+		var targetWidth = screenWidth * .27;
+		var maxHeight = screenHeight * .4
 		
-		var tweetWidth = maxTweetHeight * ratio;
-		
-		if (tweetWidth > maxTweetWidth) {
-			return maxTweetWidth;
+		if (targetWidth * ratio > maxHeight) {
+			return screenWidth * .2;
 		} else {
-			return tweetWidth;
+			return targetWidth;
 		}
+		*/
+		
+		//console.log(ratio + ',' + screenHeight + ',' + screenWidth + ',' + maxTweetHeight + ',' + maxTweetWidth + ',' + tweetWidth);
 		
 		/*
 		var screenWidth = screen.width;
@@ -601,7 +661,19 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		//xScale.domain(d3.extent(dataset, x));
 		nameScale.domain(data.map(function (d) { return d.key; }));
 
-		// update data for area/line charts based on new data values
+		d3.selectAll('.benchmark-line').remove();
+		
+		var values = getValues(current_index);
+		var className = 'name--' + values.nameNoSpace;
+		var thisJoyplot = d3.select('.' + className);
+		
+		if (benchmarked) {
+			thisJoyplot.append('path')
+				 .attr('class', 'benchmark-line')
+			     .datum(data[23].values)
+			     .attr('d', line);
+		}
+		
 		gName.select('path.area')
 			.datum(function (d) { return d.values; })
 			.transition()
@@ -613,7 +685,9 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			.transition()
 			.duration(1200)
 			.attr('d', line);
-        
+		
+		var width = parseInt(d3.select('.joyplot-container').style('width'), 10);
+		
         var svg = d3.select('.joyplot-container')
                 .select('svg')
                 .attr('viewBox', '0, 0, ' + width + ", " + svg_container_height)
@@ -640,34 +714,18 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		var screenWidth = screen.width;
 		var windowWidth = window.innerWidth;
 		var memeNameContainer = graphic.select('.meme-name-container');
+		
+		var memeNameHeight = parseInt(graphic.select('.meme-name-container').style('height'), 10);
+		var memeNameOffset = windowHeight * .13;
+		var tweetHeight = memeNameHeight + memeNameOffset;
+		
 		var tweetContainer = graphic.select('#tweet')
 		
-		if (screenWidth < 763 || windowWidth < 763) {
-			memeNameContainer.style('left', '15%');
-			memeNameContainer.style('max-width', '70%');
-			
-			var memeNameHeight = parseInt(graphic.select('.meme-name-container').style('height'), 10);
-			var memeNameOffset = parseInt(graphic.select('.meme-name-container').style('top'), 10);
-			var tweetHeight = memeNameHeight + memeNameOffset;
-
-			tweetContainer.style('left', '15%');
+		if (windowWidth > 763) {
 			tweetContainer.style('top', tweetHeight + 'px');
 		} else {
-			var peakMonth = month_numerical(peakTime);
-			if (peakMonth >= 7) {
-				tweetContainer.style('left', '15%');
-				memeNameContainer.style('left', '55%');
-			} else if (peakMonth < 7) {
-				tweetContainer.style('left', '55%');
-				memeNameContainer.style('left', '15%');
-			}
-			memeNameContainer.style('max-width', '30%');
-			memeNameContainer.style('top', '10%');
-			
-			tweetContainer.style('top', '10%');
-			
-			
-			
+			tweetContainer.style('top', '5%');
 		}
+
 	}
 });

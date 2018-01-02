@@ -13,6 +13,7 @@ body {
 	min-height: 1280px;
 	font-weight: 300;
 	color: #2a2a2a;
+	background-color:black;
 }
 
 p, h1, h2, h3, h4, a {
@@ -166,7 +167,7 @@ a, a:visited, a:hover {
 	position: sticky;
 	float: right;
 	width:100%;
-	top:5%;
+	top:0;
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
@@ -176,7 +177,7 @@ a, a:visited, a:hover {
 .scroll__graphic.is-fixed {
 	position:fixed;
 	width:100%;
-	top:5%;
+	top:0;
 }
 
 .scroll__graphic.is-bottom {
@@ -188,6 +189,8 @@ a, a:visited, a:hover {
 	width:500px;
 	margin: 0 auto;
 	text-align: center;
+	margin-top:10px;
+	top:2%
 }
 
 .change-data-button {
@@ -219,19 +222,18 @@ a, a:visited, a:hover {
 .meme-name-container {
 	position:absolute;
 	font-family:'Mada';
-	left:15%;
-	background-color:white;
+	left:2%;
 	padding:10px;
 	border-radius:5px;
-	top:10%;
 }
 
 .meme-name {
 	font-weight:700;
+	color:white;
 }
 
 .meme-name-sub {
-
+	color:white;
 }
 
 .month {
@@ -240,8 +242,12 @@ a, a:visited, a:hover {
 }
 
 @media only screen and (min-width : 1000px) {
+	.meme-name-container {
+		top:13%;
+		max-width:25%;
+	}
 	.meme-name {
-		font-size: 50px;
+		font-size: 35px;
 	}
 
 	.meme-name-sub {
@@ -254,8 +260,12 @@ a, a:visited, a:hover {
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
+	.meme-name-container {
+		top:13%;
+		max-width:25%;
+	}
 	.meme-name {
-		font-size: 40px;
+		font-size: 30px;
 	}
 
 	.meme-name-sub {
@@ -268,9 +278,13 @@ a, a:visited, a:hover {
 }
 
 @media only screen and (max-width: 763px) {
+	.meme-name-container {
+		top:5%;
+		max-width:45%;
+	}
 	
 	.meme-name {
-		font-size: 30px;
+		font-size:25px;
 	}
 
 	.meme-name-sub {
@@ -284,8 +298,26 @@ a, a:visited, a:hover {
 
 #tweet {
 	position:absolute;
-	left:55%;
-	top:10%;
+	left:3%;
+}
+
+@media only screen and (min-width : 1000px) {
+	#tweet {
+		left:3%;
+	}
+}
+
+@media only screen and (min-width : 764px) and (max-width: 999px) {
+	#tweet {
+		left:3%;
+	}
+}
+
+@media only screen and (max-width: 763px) {
+	#tweet {
+		top:5%;
+		left:50%;
+	}
 }
 
 
@@ -304,24 +336,25 @@ a, a:visited, a:hover {
 .joyplot-container {
 	position:absolute;
 	top:0;
-	width:80%;
-	left:10%;
 }
 @media only screen and (min-width : 1000px) {
 	.joyplot-container {
-		width:80%;
+		width:60%;
+		left:35%;
 	}
 
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	.joyplot-container {
-		width:80%;
+		width:60%;
+		left:35%;
 	}
 }
 
 @media only screen and (max-width: 763px) {
 	.joyplot-container {
+		left:5%;
 		width:80%;
 	}
 }
@@ -334,47 +367,59 @@ svg {
 }
 
 .x-axis line {
+	stroke:white;
+}
+
+.x-axis path {
+	stroke:white;
 }
 
 .x-axis text {
 	font-family: 'Mada';
 	font-size: 12px;
 	font-weight:500;
+	fill:white;
 }
 
 .line {
 	fill: none;
-	stroke: #fff;
+}
+
+.benchmark-line {
+	stroke: white;
+	stroke-dasharray: 2;
+	fill:none;
+	stroke-width:1.5;
 }
 
 .area {
-	fill: #448cab;
+	fill: #ccf4f9;
 }
 
 .peak-annotation {
     text-align:center;
     line-height:5px;
     font-family:'Mada';
-    font-weight:200;
-    border:1px solid #aaa;
-    background-color:white;
+    font-weight:700;
+    border:1px solid white;
+    background-color:black;
     padding:10px;
     padding-bottom:15px;
     position:relative;
     height: 25px;
     font-size:14px;
     width:100px;
-    color:black;
+    color:white;
 }
 
 .annotation-triangle {
     display: block;
     content: ' ';
-    background: #fff;
+    background: black;
     width: 10px;
     height: 10px;
-    border-top: 1px solid #aaa;
-    border-right: 1px solid #aaa;
+    border-top: 1px solid white;
+    border-right: 1px solid white;
     border-top-right-radius: 2px;
     position: absolute;
     top:81%;
