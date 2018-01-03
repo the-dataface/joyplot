@@ -499,7 +499,9 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		  .style('left', triangleOffset + 'px')
 		  .style('top', annotationHeight - 6 + 'px');
 		
-		if (benchmarked) {
+		console.log(name);
+		
+		if (benchmarked && name !== 'UnitedAirlines') {
 			var benchmarkValues = getValues(23);
 			d3.select('.joyplot-container')
 			  .append('div')
