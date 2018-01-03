@@ -550,14 +550,6 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 				
 				var windowWidth = window.innerWidth;
 				var tweetWidth;
-				
-				if (windowWidth > 763) {
-					tweetWidth = windowWidth * .2;
-				} else {
-					tweetWidth = windowWidth * .4;
-				}
-				
-				d3.select(r).style('width', tweetWidth + 'px');
 			
 			});
 				
@@ -584,7 +576,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		var tweetWidth;
 		
 		if (windowWidth > 763) {
-			tweetWidth = windowWidth * .2;
+			tweetWidth = windowWidth * .3;
 		} else {
 			tweetWidth = windowWidth * .4;
 		}
