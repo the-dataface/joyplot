@@ -249,14 +249,15 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	var svgContainerHeight;
 	  
 	if (windowWidth > 763) {
-		width = windowWidth * .6;
-		leftMargin = windowWidth * .35;
-		axisTopMargin = windowHeight * .1;
+		width = windowWidth * .7;
+		leftMargin = windowWidth * .15;
+		axisTopMargin = 20;
 		svgContainerHeight = 11000;
 	} else {
 		width = windowWidth * .9;
 		leftMargin = windowWidth * .05;
-		axisTopMargin = windowHeight * .6;
+		//axisTopMargin = windowHeight * .6;
+		axisTopMargin = 20;
 		svgContainerHeight = 4000;
 	}
 	  
@@ -471,7 +472,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 							.attr('class', 'peak-annotation')
 							.style('position', 'absolute')
 							.style('visibility', 'hidden')
-							.text('This meme peaked in 2017 due to Cookie Monster tweeting out a picture of it after the Oscars. The internet got a hold of it and it shot up to the top charts of Imgur immediately. However, it fell out of popularity because Logal Paul used it, and he is a douche.');
+							.text('Index of 100');
 		
 		//use this to determine triangle location. since month 7 is starting point 
 		//for when tweet is on left side, offset that to be month 1
@@ -728,7 +729,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	
 	function setMemeLocationSize(peakTime) {
 		
-		var screenWidth = screen.width;
+		var peakMonth = month_numerical(peakTime);
+		var firstHalf = true;
+		if (peakMonth > 6) {
+			firstHalf = false;
+		}
 		var windowWidth = window.innerWidth;
 		var memeNameContainer = graphic.select('.meme-name-container');
 		
@@ -736,12 +741,22 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		var memeNameOffset = windowHeight * .13;
 		var tweetHeight = memeNameHeight + memeNameOffset;
 		
-		var tweetContainer = graphic.select('#tweet')
+		var tweetContainer = graphic.select('#tweet');
 		
 		if (windowWidth > 763) {
-			tweetContainer.style('top', tweetHeight + 'px');
+			if (firstHalf) {
+				tweetContainer.style('left', '55%');
+			} else {
+				tweetContainer.style('left', '20%');
+			}
+			tweetContainer.style('top', '35%');
 		} else {
-			tweetContainer.style('top', '5%');
+			if (firstHalf) {
+				tweetContainer.style('left', '55%');
+			} else {
+				tweetContainer.style('left', '5%');
+			}
+			tweetContainer.style('top', tweetHeight + 'px');
 		}
 
 	}

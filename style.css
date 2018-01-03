@@ -188,9 +188,10 @@ a, a:visited, a:hover {
 .change-data-button-container {
 	width:500px;
 	margin: 0 auto;
+	margin-top:20px;
 	text-align: center;
-	margin-top:10px;
-	top:2%
+	position:relative;
+	display:block;
 }
 
 .change-data-button {
@@ -220,11 +221,11 @@ a, a:visited, a:hover {
 }
 
 .meme-name-container {
-	position:absolute;
 	font-family:'Mada';
-	left:2%;
 	padding:10px;
-	border-radius:5px;
+	text-align:center;
+	width:100%;
+	
 }
 
 .meme-name {
@@ -234,6 +235,7 @@ a, a:visited, a:hover {
 
 .meme-name-sub {
 	color:white;
+	margin-left:3px;
 }
 
 .month {
@@ -241,10 +243,20 @@ a, a:visited, a:hover {
 	font-weight:700;
 }
 
+.meme-description {
+	font-family:'Mada';
+	font-size:12;
+	text-align:center;
+	color:white;
+	width:100%;
+	text-align:center;
+	margin:0 auto;
+	margin-top:20px;
+}
+
 @media only screen and (min-width : 1000px) {
 	.meme-name-container {
-		top:13%;
-		max-width:25%;
+		top:2%;
 	}
 	.meme-name {
 		font-size: 35px;
@@ -257,12 +269,15 @@ a, a:visited, a:hover {
 	.month {
 		font-size:30px;
 	}
+	.meme-description {
+		max-width:50%;
+		font-size:18px;
+	}
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	.meme-name-container {
-		top:13%;
-		max-width:25%;
+		top:2%;
 	}
 	.meme-name {
 		font-size: 30px;
@@ -275,12 +290,15 @@ a, a:visited, a:hover {
 	.month {
 		font-size:25px;
 	}
+	.meme-description {
+		max-width:80%;
+		font-size:15px;
+	}
 }
 
 @media only screen and (max-width: 763px) {
 	.meme-name-container {
-		top:5%;
-		max-width:45%;
+		top:2%;
 	}
 	
 	.meme-name {
@@ -294,29 +312,43 @@ a, a:visited, a:hover {
 	.month {
 		font-size:20px;
 	}
+	.meme-description {
+		max-width:90%;
+		font-size:12px;
+	}
 }
+
+.line-break-two {
+	width: 10%;
+	height:1px;
+	background-color:white;
+	text-align:center;
+	margin:0 auto;
+	margin-top:20px;
+}
+
 
 #tweet {
 	position:absolute;
-	left:3%;
+	left:20%;
 }
 
 @media only screen and (min-width : 1000px) {
 	#tweet {
-		left:3%;
+		left:55%;
 	}
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	#tweet {
-		left:3%;
+		left:55%;
 	}
 }
 
 @media only screen and (max-width: 763px) {
 	#tweet {
 		top:5%;
-		left:50%;
+		left:55%;
 	}
 }
 
@@ -339,16 +371,16 @@ a, a:visited, a:hover {
 }
 @media only screen and (min-width : 1000px) {
 	.joyplot-container {
-		width:60%;
-		left:35%;
+		width:70%;
+		left:15%;
 	}
 
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	.joyplot-container {
-		width:60%;
-		left:35%;
+		width:70%;
+		left:15%;
 	}
 }
 
