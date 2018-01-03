@@ -13,6 +13,7 @@ body {
 	min-height: 1280px;
 	font-weight: 300;
 	color: #2a2a2a;
+	background-color:black;
 }
 
 p, h1, h2, h3, h4, a {
@@ -166,7 +167,7 @@ a, a:visited, a:hover {
 	position: sticky;
 	float: right;
 	width:100%;
-	top:5%;
+	top:0;
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
@@ -176,7 +177,7 @@ a, a:visited, a:hover {
 .scroll__graphic.is-fixed {
 	position:fixed;
 	width:100%;
-	top:5%;
+	top:0;
 }
 
 .scroll__graphic.is-bottom {
@@ -187,7 +188,10 @@ a, a:visited, a:hover {
 .change-data-button-container {
 	width:500px;
 	margin: 0 auto;
+	margin-top:20px;
 	text-align: center;
+	position:relative;
+	display:block;
 }
 
 .change-data-button {
@@ -217,21 +221,21 @@ a, a:visited, a:hover {
 }
 
 .meme-name-container {
-	position:absolute;
 	font-family:'Mada';
-	left:15%;
-	background-color:white;
 	padding:10px;
-	border-radius:5px;
-	top:10%;
+	text-align:center;
+	width:100%;
+	
 }
 
 .meme-name {
 	font-weight:700;
+	color:white;
 }
 
 .meme-name-sub {
-
+	color:white;
+	margin-left:3px;
 }
 
 .month {
@@ -239,9 +243,23 @@ a, a:visited, a:hover {
 	font-weight:700;
 }
 
+.meme-description {
+	font-family:'Mada';
+	font-size:12;
+	text-align:center;
+	color:white;
+	width:100%;
+	text-align:center;
+	margin:0 auto;
+	margin-top:20px;
+}
+
 @media only screen and (min-width : 1000px) {
+	.meme-name-container {
+		top:2%;
+	}
 	.meme-name {
-		font-size: 50px;
+		font-size: 35px;
 	}
 
 	.meme-name-sub {
@@ -250,42 +268,89 @@ a, a:visited, a:hover {
 
 	.month {
 		font-size:30px;
+	}
+	.meme-description {
+		max-width:50%;
+		font-size:18px;
 	}
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
-	.meme-name {
-		font-size: 40px;
+	.meme-name-container {
+		top:2%;
 	}
-
-	.meme-name-sub {
-		font-size:25px;
-	}
-
-	.month {
-		font-size:25px;
-	}
-}
-
-@media only screen and (max-width: 763px) {
-	
 	.meme-name {
 		font-size: 30px;
 	}
 
 	.meme-name-sub {
+		font-size:25px;
+	}
+
+	.month {
+		font-size:25px;
+	}
+	.meme-description {
+		max-width:80%;
+		font-size:15px;
+	}
+}
+
+@media only screen and (max-width: 763px) {
+	.meme-name-container {
+		top:2%;
+	}
+	
+	.meme-name {
+		font-size:25px;
+	}
+
+	.meme-name-sub {
 		font-size:20px;
 	}
 
 	.month {
 		font-size:20px;
 	}
+	.meme-description {
+		max-width:90%;
+		font-size:12px;
+	}
 }
 
+.line-break-two {
+	width: 10%;
+	height:1px;
+	background-color:white;
+	text-align:center;
+	margin:0 auto;
+	margin-top:20px;
+	position:relative;
+}
+
+
 #tweet {
-	position:absolute;
-	left:55%;
-	top:10%;
+	position:relative;
+	
+}
+
+@media only screen and (min-width : 1000px) {
+	#tweet {
+		left:55%;
+	}
+}
+
+@media only screen and (min-width : 764px) and (max-width: 999px) {
+	#tweet {
+		left:55%;
+	}
+}
+
+@media only screen and (max-width: 763px) {
+	#tweet {
+		top:5%;
+		left:55%;
+	}
 }
 
 
@@ -304,24 +369,25 @@ a, a:visited, a:hover {
 .joyplot-container {
 	position:absolute;
 	top:0;
-	width:80%;
-	left:10%;
 }
 @media only screen and (min-width : 1000px) {
 	.joyplot-container {
-		width:80%;
+		width:70%;
+		left:15%;
 	}
 
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	.joyplot-container {
-		width:80%;
+		width:70%;
+		left:15%;
 	}
 }
 
 @media only screen and (max-width: 763px) {
 	.joyplot-container {
+		left:5%;
 		width:80%;
 	}
 }
@@ -334,51 +400,60 @@ svg {
 }
 
 .x-axis line {
+	stroke:white;
+}
+
+.x-axis path {
+	stroke:white;
 }
 
 .x-axis text {
 	font-family: 'Mada';
 	font-size: 12px;
 	font-weight:500;
+	fill:white;
 }
 
 .line {
 	fill: none;
-	stroke: #fff;
+}
+
+.benchmark-line {
+	stroke: white;
+	stroke-dasharray: 2;
+	fill:none;
+	stroke-width:1.5;
 }
 
 .area {
-	fill: #448cab;
+	fill: #ccf4f9;
 }
 
 .peak-annotation {
     text-align:center;
-    line-height:5px;
     font-family:'Mada';
-    font-weight:200;
-    border:1px solid #aaa;
-    background-color:white;
+    font-weight:700;
+    border:1px solid white;
+    background-color:black;
     padding:10px;
     padding-bottom:15px;
     position:relative;
-    height: 25px;
     font-size:14px;
-    width:100px;
-    color:black;
+    color:white;
+	max-width:50%;
+	border-radius:5px;
 }
 
 .annotation-triangle {
     display: block;
     content: ' ';
-    background: #fff;
+    background: black;
     width: 10px;
     height: 10px;
-    border-top: 1px solid #aaa;
-    border-right: 1px solid #aaa;
+    border-top: 1px solid white;
+    border-right: 1px solid white;
     border-top-right-radius: 2px;
     position: absolute;
-    top:81%;
-    left:7px;
     -webkit-transform: rotate(135deg);
     -moz-transform: rotate(135deg);
     -o-transform: rotate(135deg);
@@ -404,7 +479,18 @@ svg {
 	}
 }
 
+.benchmark-annotation {
+	color:white;
+	-webkit-transform: translate(0%, -100%);
+    -moz-transform: translate(0%, -100%);
+    -o-transform: translate(0%, -100%);
+    -ms-transform: translate(0%, -100%);
+    transform: translate(0%, -100%);
+	font-style:italic;
+}
+
 
 #tweet-storage {
 	display:none;
 }
+
