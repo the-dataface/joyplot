@@ -50,6 +50,7 @@ var svg = d3.select('.joyplot-container')
 
 // create separate svg for fixed x-axis that will be in scrollytelling
 var fixed_axis_svg = d3.select('.scroll__graphic')
+					   .select('.axis-container')
 					   .append('svg')
 					 	.attr('width', '100%')
 					 	.attr('height', '100px')
@@ -749,14 +750,13 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			} else {
 				tweetContainer.style('left', '20%');
 			}
-			tweetContainer.style('top', '35%');
 		} else {
 			if (firstHalf) {
 				tweetContainer.style('left', '55%');
 			} else {
 				tweetContainer.style('left', '5%');
 			}
-			tweetContainer.style('top', tweetHeight + 'px');
+			//tweetContainer.style('top', tweetHeight + 'px');
 		}
 
 	}

@@ -325,12 +325,13 @@ a, a:visited, a:hover {
 	text-align:center;
 	margin:0 auto;
 	margin-top:20px;
+	position:relative;
 }
 
 
 #tweet {
-	position:absolute;
-	left:20%;
+	position:relative;
+	
 }
 
 @media only screen and (min-width : 1000px) {
