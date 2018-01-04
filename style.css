@@ -88,28 +88,6 @@ h1 {
 	height:100%;
 }
 
-.cell:hover img {
-	opacity:.2;
-	-webkit-transform:scale(1.2);
-	transform:scale(1.2);
-	-webkit-transition: 0.2s ease;
- 	transition: 0.2s ease;
-}
-
-.meme-hover-text {
-	position:absolute;
-	top:50%;
-	left:50%;
-	transform: translate(-50%, -50%);
-	visibility:hidden;
-	font-weight:700;
-}
-
-.cell:hover .meme-hover-text {
-	visibility:visible;
-	-webkit-transition: 0.6s ease;
- 	transition: 0.6s ease;
-}
 
 .header {
 	font-weight:700;
@@ -179,24 +157,12 @@ h1 {
 	top: auto;
 }
 
-.overlay {
-	position:absolute;
-	top:0;
-	left:0;
-	height:100%;
-	width:100%;
-	background-color:black;
-	opacity:.5;
-	visibility:hidden;
-	z-index:998;
-}
 
 .link-container {
-	width:500px;
-	margin: 0 auto;
+	width:100%;
 	margin-top:5px;
-	text-align: center;
 	position:relative;
+	text-align:center;
 	display:block;
 }
 
@@ -205,18 +171,32 @@ h1 {
 	cursor:pointer;
 	font-size: 16px;
 	display:inline-block;
-	text-align:center;
-	padding-left:5px;
-	padding-right:5px;
+	width:130px;
 	color:white;
 	text-decoration:underline;
 	text-decoration-color:grey;
 
 }
 
+#website-link {
+	text-align:right;
+	padding-right:5px;
+}
+
+#example-link {
+	text-align:left;
+	padding-left:5px;
+}
+
+@media only screen and (max-width: 763px) {
+	.link {
+		font-size: 13px;
+	}
+}
+
 
 .change-data-button-container {
-	width:500px;
+	width:100%;
 	margin: 0 auto;
 	margin-top:20px;
 	text-align: center;
@@ -232,7 +212,7 @@ h1 {
 	font-size: 14px;
 	border-radius: 2px;
 	display:inline-block;
-	width:200px;
+	width:170px;
 	text-align:center;
 	background-color:white;
 }
@@ -246,7 +226,7 @@ h1 {
 	.change-data-button {
 		font-size: 12px;
 		display:inline-block;
-		width:150px;
+		width:130px;
 	}
 }
 
@@ -286,7 +266,7 @@ h1 {
 
 @media only screen and (min-width : 1000px) {
 	.meme-name-container {
-		top:2%;
+		top:10%;
 	}
 	.meme-name {
 		font-size: 35px;
@@ -300,14 +280,14 @@ h1 {
 		font-size:30px;
 	}
 	.meme-description {
-		max-width:50%;
+		max-width:60%;
 		font-size:18px;
 	}
 }
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	.meme-name-container {
-		top:2%;
+		top:10%;
 	}
 	.meme-name {
 		font-size: 30px;
@@ -328,7 +308,7 @@ h1 {
 
 @media only screen and (max-width: 763px) {
 	.meme-name-container {
-		top:2%;
+		top:4%;
 	}
 
 	.meme-name {
@@ -471,8 +451,7 @@ svg {
     font-weight:700;
     border:1px solid white;
     background-color:black;
-    padding:10px;
-    padding-bottom:15px;
+    padding:5px;
     position:relative;
     font-size:14px;
     color:white;
@@ -528,4 +507,75 @@ svg {
 
 #tweet-storage {
 	display:none;
+}
+
+.table-container {
+	width:50%;
+	margin:0 auto;
+}
+
+.meme-table {
+	width:100%;
+	color:white;
+	border-collapse: collapse; 
+}
+
+.meme-table td {
+	font-size: .9rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.meme-header {
+	text-align: left;
+	font-size: .8rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 1.5rem;
+}
+
+.index-header {
+	width:45%;
+	text-align: left;
+	font-size: .8rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 1.5rem;
+}
+
+.table-head tr {
+	border-bottom: 2px solid #999;
+}
+
+
+.table-body tr {
+	border-bottom: 1px solid #999;
+}
+
+.table-rank {
+	font-weight: 700;
+}
+
+.table-meme-name {
+	font-weight: 700;
+}
+
+.table-meme-date {
+	font-weight: 300;
+}
+
+.table-index {
+	font-weight: 700;
+}
+
+.table-bar {
+	background-color:red;
+	height:1.5rem;
+}
+
+.table-bar span {
+	color: #fff;
+    font-size: .7rem;
+    line-height: 2;
+    font-weight: 500;
 }

@@ -1,20 +1,4 @@
 
-/*d3.selectAll('.cell')
-  .on('mouseover', function () {
-	var thisCell = d3.select(this);
-	thisCell.select('img').style('opacity', '.3');
-
-	thisCell.append('div').attr('class', 'hover-label').style('position', 'relative').text('hey');
-  })
-  .on('mouseout', function() {
-	var thisCell = d3.select(this);
-	thisCell.select('img').style('opacity', '1');
-
-	thisCell.select('.hover-label').remove();
-  })
-*/
-
-
 // width of window
 var windowWidth = window.innerWidth;
 var screenWidth = screen.width;
@@ -32,9 +16,9 @@ var overlap = 0.5;
 if (screenWidth < 763 || windowWidth < 763) {
 	var svg_container_height = 4000;
 } else if (screenWidth < 1000 || windowWidth < 1000) {
-	var svg_container_height = 7000;
+	var svg_container_height = 6000;
 } else {
-	var svg_container_height = 10000;
+	var svg_container_height = 9000;
 }
 
 var svg_height = svg_container_height - margin.top - margin.bottom;
@@ -96,6 +80,7 @@ var parseTime = d3.timeParse('%m/%d/%Y');
 var timeFormat = d3.timeFormat('%B %e');
 var month_numerical = d3.timeFormat('%m');
 var month_full_text = d3.timeFormat('%B');
+var day_numerical = d3.timeFormat('%d');
 
 // removes spaces from meme names - used to make ID for each meme's joyplot container
 var cleanString = function (string) {
@@ -307,6 +292,8 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 		var values = getValues(current_index);
 
 		createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
+		  
+		changeData(benchmarked);
 
 		scroller.resize();
 	  }
@@ -466,23 +453,27 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 		// update data from benchmarked to not benchmarked
 		d3.selectAll('.change-data-button')
 			.on('click', function () {
-				d3.selectAll('.change-data-button').classed('change-data-button-selected', false)
-
 				var thisButton = d3.select(this);
+				
+				if (!thisButton.classed('change-data-button-selected')) {
+					
+					d3.selectAll('.change-data-button').classed('change-data-button-selected', false)
 
-				thisButton.classed('change-data-button-selected', true);
+					thisButton.classed('change-data-button-selected', true);
 
-				var buttonIdentifier = thisButton.attr('id');
-				if (buttonIdentifier == 'change-button-not-benchmarked') {
-					benchmarked = false;
-				} else {
-					benchmarked = true;
+					var buttonIdentifier = thisButton.attr('id');
+					if (buttonIdentifier == 'change-button-not-benchmarked') {
+						benchmarked = false;
+					} else {
+						benchmarked = true;
+					}
+					changeData(benchmarked);
+
+					var values = getValues(current_index);
+
+					createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, true);
 				}
-				changeData(benchmarked);
-
-				var values = getValues(current_index);
-
-				createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, true);
+			
 			});
 
 		d3.select('#example-link')
@@ -526,7 +517,7 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 								.attr('class', 'peak-annotation')
 								.style('position', 'absolute')
 								.style('visibility', 'hidden')
-								.text('Index of 100');
+								.text('Index of ' + peakMentions);
 
 			//use this to determine triangle location. since month 7 is starting point
 			//for when tweet is on left side, offset that to be month 1
@@ -627,7 +618,7 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 			var tweetWidth;
 
 			if (windowWidth > 763) {
-				tweetWidth = windowWidth * .3;
+				tweetWidth = windowWidth * .2;
 			} else {
 				tweetWidth = windowWidth * .4;
 			}
@@ -737,6 +728,7 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 					 .datum(data[24].values)
 					 .attr('d', line);
 			}
+			
 
 			gName.select('path.area')
 				.datum(function (d) { return d.values; })
@@ -790,23 +782,65 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 			var memeNameOffset = windowHeight * .13;
 			var tweetHeight = memeNameHeight + memeNameOffset;
 
-			var tweetContainer = graphic.select('#tweet');
-
-			if (windowWidth > 763) {
-				if (firstHalf) {
-					tweetContainer.style('left', '55%');
+		}
+		
+		var rankedData = [];
+		function getTableArray(d) {
+			for (i in d) {
+				var name, rank, peakMentions, peakTime, day, month, timeOfMonth;
+				name = d[i].meme;
+				rank = d[i].rank;
+				peakMentions = d[i].peak_index;
+				peakTime = d[i].peak_week;
+				
+				month = month_full_text(peakTime);
+				
+				day = day_numerical(peakTime);
+				if (day < 10) {
+					timeOfMonth = 'early ';
+				} else if (day < 20) {
+					timeOfMonth = 'mid ';
 				} else {
-					tweetContainer.style('left', '20%');
+					timeOfMonth = 'end of ';
 				}
-			} else {
-				if (firstHalf) {
-					tweetContainer.style('left', '55%');
-				} else {
-					tweetContainer.style('left', '5%');
-				}
-				//tweetContainer.style('top', tweetHeight + 'px');
+				
+				var thisMeme = {name: name, rank:rank, peakMentions: peakMentions, month: month, timeOfMonth: timeOfMonth};
+				rankedData.push(thisMeme);
 			}
+			
+		}
 
+		getTableArray(first_dataset);
+		rankedData.sort(function (a, b) { return a.rank - b.rank; });
+		
+		for (i in rankedData) {
+			var memeName = rankedData[i].name;
+			var memeRank = rankedData[i].rank;
+			var memeMentions = rankedData[i].peakMentions;
+			var memeMonth = rankedData[i].month;
+			var memeTOM = rankedData[i].timeOfMonth;
+				
+			var tr = d3.select('.meme-table')
+			  			.select('.table-body')
+			  			.append('tr');
+			
+			var rank = tr.append('td').attr('class', 'table-rank').text(rank +  '.');
+			
+			var meme = tr.append('td')
+						 .append('span')
+							.attr('class', 'table-meme-name')
+							.text(memeName + ' ')
+						 .append('span')
+							.attr('class', 'table-meme-date')
+							.text('peaked ' + memeTOM + memeMonth);
+			
+			var searchIndex = tr.append('td')
+									.attr('class', 'table-index')
+								.append('div')
+									.attr('class', 'table-bar')
+									.style('width', memeMentions + '%')
+								.append('span')
+									.text(memeMentions);
 		}
 	});
 });
