@@ -787,25 +787,30 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 		var rankedData = [];
 		function getTableArray(d) {
 			for (i in d) {
-				var name, rank, peakMentions, peakTime, day, month, timeOfMonth;
-				name = d[i].meme;
-				rank = d[i].rank;
-				peakMentions = d[i].peak_index;
-				peakTime = d[i].peak_week;
+				if (i < 50) {
+					var name, rank, peakMentions, peakTime, day, month, timeOfMonth;
+					name = d[i].meme;
+					rank = d[i].rank;
+					peakMentions = d[i].peak_index;
+					peakTime = parseTime(d[i].peak_week);
+					
+					console.log(peakTime);
 				
-				month = month_full_text(peakTime);
+					month = month_full_text(peakTime);
 				
-				day = day_numerical(peakTime);
-				if (day < 10) {
-					timeOfMonth = 'early ';
-				} else if (day < 20) {
-					timeOfMonth = 'mid ';
-				} else {
-					timeOfMonth = 'end of ';
-				}
-				
-				var thisMeme = {name: name, rank:rank, peakMentions: peakMentions, month: month, timeOfMonth: timeOfMonth};
-				rankedData.push(thisMeme);
+					day = day_numerical(peakTime);
+					console.log(day);
+					if (day < 10) {
+						timeOfMonth = 'early ';
+					} else if (day < 20) {
+						timeOfMonth = 'mid ';
+					} else {
+						timeOfMonth = 'end of ';
+					}
+
+					var thisMeme = {name: name, rank:rank, peakMentions: peakMentions, month: month, timeOfMonth: timeOfMonth};
+					rankedData.push(thisMeme);
+					}
 			}
 			
 		}
@@ -824,7 +829,7 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 			  			.select('.table-body')
 			  			.append('tr');
 			
-			var rank = tr.append('td').attr('class', 'table-rank').text(rank +  '.');
+			var rank = tr.append('td').attr('class', 'table-rank').text(memeRank +  '.');
 			
 			var meme = tr.append('td')
 						 .append('span')
