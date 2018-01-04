@@ -364,7 +364,7 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 			if (benchmarked) {
 				thisJoyplot.append('path')
 					 .attr('class', 'benchmark-line')
-					 .datum(data[24].values)
+					 .datum(data[3].values)
 					 .attr('d', line);
 			}
 
@@ -543,13 +543,13 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 			  .style('left', triangleOffset + 'px')
 			  .style('top', annotationHeight - 6 + 'px');
 
-			if (benchmarked && name !== 'UnitedAirlinesPassengerRemoval') {
-				var benchmarkValues = getValues(24);
+			if (benchmarked && name !== 'CashMeOutside') {
+				var benchmarkValues = getValues(3);
 				d3.select('.joyplot-container')
 				  .append('div')
 					.attr('class', 'benchmark-annotation')
 					.style('position', 'absolute')
-					.text('United Airlines benchmark')
+					.text('Cash Me Outside benchmark')
 					.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(benchmarkValues.peakMentions) + 'px')
 					.style('left', xScale(benchmarkValues.peakTime) + 'px')
 					.style('visibility', 'hidden');
@@ -725,7 +725,7 @@ d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
 			if (benchmarked) {
 				thisJoyplot.append('path')
 					 .attr('class', 'benchmark-line')
-					 .datum(data[24].values)
+					 .datum(data[3].values)
 					 .attr('d', line);
 			}
 			
