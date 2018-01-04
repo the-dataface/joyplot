@@ -360,9 +360,14 @@ h1 {
 
 
 #tweet {
-	position:relative;
+	position:absolute;
 	z-index:999;
-
+	display:none;
+	-webkit-transform: translate(-50%, 0%);
+    -moz-transform: translate(-50%, 0%);
+    -o-transform: translate(-50%, 0%);
+    -ms-transform: translate(-50%, 0%);
+    transform: translate(-50%, 0%);
 }
 
 @media only screen and (min-width : 1000px) {
