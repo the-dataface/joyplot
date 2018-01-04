@@ -112,7 +112,7 @@ var rowConverter = function (d) {
 };
 
 // import data from csv
-d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
+d3.csv('Data/meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
 	if (error) { throw error; }
 
 	var benchmarked = false;
