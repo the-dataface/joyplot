@@ -26,12 +26,6 @@ h1 {
 	font-weight:700;
 }
 
-a, a:visited, a:hover {
-	color: #f30;
-	text-decoration: none;
-	border-bottom: 1px solid currentColor;
-}
-
 #intro {
 	margin: 0 auto;
 	text-align: center;
@@ -185,6 +179,42 @@ a, a:visited, a:hover {
 	top: auto;
 }
 
+.overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	background-color:black;
+	opacity:.5;
+	visibility:hidden;
+	z-index:998;
+}
+
+.link-container {
+	width:500px;
+	margin: 0 auto;
+	margin-top:5px;
+	text-align: center;
+	position:relative;
+	display:block;
+}
+
+.link {
+	font-weight:500;
+	cursor:pointer;
+	font-size: 16px;
+	display:inline-block;
+	text-align:center;
+	padding-left:5px;
+	padding-right:5px;
+	color:white;
+	text-decoration:underline;
+	text-decoration-color:grey;
+
+}
+
+
 .change-data-button-container {
 	width:500px;
 	margin: 0 auto;
@@ -225,7 +255,7 @@ a, a:visited, a:hover {
 	padding:10px;
 	text-align:center;
 	width:100%;
-	
+
 }
 
 .meme-name {
@@ -300,7 +330,7 @@ a, a:visited, a:hover {
 	.meme-name-container {
 		top:2%;
 	}
-	
+
 	.meme-name {
 		font-size:25px;
 	}
@@ -331,7 +361,8 @@ a, a:visited, a:hover {
 
 #tweet {
 	position:relative;
-	
+	z-index:999;
+
 }
 
 @media only screen and (min-width : 1000px) {
@@ -493,4 +524,3 @@ svg {
 #tweet-storage {
 	display:none;
 }
-

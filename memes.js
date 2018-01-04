@@ -3,13 +3,13 @@
   .on('mouseover', function () {
 	var thisCell = d3.select(this);
 	thisCell.select('img').style('opacity', '.3');
-	
+
 	thisCell.append('div').attr('class', 'hover-label').style('position', 'relative').text('hey');
   })
   .on('mouseout', function() {
 	var thisCell = d3.select(this);
 	thisCell.select('img').style('opacity', '1');
-	
+
 	thisCell.select('.hover-label').remove();
   })
 */
@@ -114,7 +114,7 @@ var rowConverter = function (d) {
 // import data from csv
 d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
 	if (error) { throw error; }
-	
+
 	var benchmarked = false;
 
 	// Sort all data by time
@@ -145,13 +145,13 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			tweet_ids.push(tweet_id);
 		}
 	}
-	
+
 	// run findPeaks function on our dataset
 	findPeaks(data);
 
 	// sort memes by peak time
 	data.sort(function (a, b) { return a.peakTime - b.peakTime; });
-	
+
 	// run getTweetId function on our dataset
 	findTweetIds(data);
 
@@ -248,7 +248,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	var leftMargin;
 	var axisTopMargin;
 	var svgContainerHeight;
-	  
+
 	if (windowWidth > 763) {
 		width = windowWidth * .7;
 		leftMargin = windowWidth * .15;
@@ -261,7 +261,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		axisTopMargin = 20;
 		svgContainerHeight = 4000;
 	}
-	  
+
 	d3.select('.joyplot-container')
         .style('width', width)
       .select('svg')
@@ -276,13 +276,13 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
                   .call(xAxis);
 
     graphic.style('height', windowHeight + 'px')
-	  
+
     graphic.select('svg')
 	  			.attr('transform', 'translate(0, ' + axisTopMargin + ')')
            .select('g')
            		.attr('transform', 'translate(' + leftMargin + ',' + 20 + ')');
-    
-	  
+
+
 	var values = getValues(current_index);
 
     createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
@@ -314,10 +314,10 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// not in use right now
 		direction = response.direction;
-        
+
         index = response.index;
 		current_index = index;
-		
+
 		var values = getValues(index);
 
 		// moves cute little red circle
@@ -336,13 +336,13 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		d3.select('g.names')
 			.selectAll('g')
 			.attr('opacity', '.1');
-		
+
 		var className = 'name--' + values.nameNoSpace;
 		var thisJoyplot = d3.select('.' + className);
 		thisJoyplot.attr('opacity', '1');
-		
+
 		d3.selectAll('.benchmark-line').remove();
-		
+
 		if (benchmarked) {
 			thisJoyplot.append('path')
 				 .attr('class', 'benchmark-line')
@@ -352,14 +352,14 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		// create annotations
 		createAnnotations(index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
-		
+
 		// create tweets
 		grabTweet(index);
 		// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
 		setMemeLocationSize(values.peakTime);
 	}
-	
-	
+
+
 	// fix sticky graphic when enter container
 	function handleContainerEnter (response) {
 		// response = { direction }
@@ -389,11 +389,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		// 2. setup the scroller passing options
 		// this will also initialize trigger observations
 		// 3. bind scrollama event handlers (this can be chained like below)
-		
+
 		var screenWidth = screen.width;
 		var windowWidth = window.innerWidth;
 		var offsetPct;
-		
+
 		if (screenWidth < 763 || windowWidth < 763) {
 			offsetPct = .9;
 		} else {
@@ -436,11 +436,11 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	d3.selectAll('.change-data-button')
 		.on('click', function () {
 			d3.selectAll('.change-data-button').classed('change-data-button-selected', false)
-		
+
 			var thisButton = d3.select(this);
-		
+
 			thisButton.classed('change-data-button-selected', true);
-		
+
 			var buttonIdentifier = thisButton.attr('id');
 			if (buttonIdentifier == 'change-button-not-benchmarked') {
 				benchmarked = false;
@@ -448,59 +448,63 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 				benchmarked = true;
 			}
 			changeData(benchmarked);
-			
+
 			var values = getValues(current_index);
 
 			createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, true);
 		});
 
+	d3.select('#example-link')
+		.on('click', function () {
+
+	});
 
 	// create annotations
 	function createAnnotations (index, name, peakMentions, peakTime, buttonPressed) {
 		// remove any existing annotations
-        
+
         d3.selectAll('.peak-annotation').remove();
 		d3.selectAll('.benchmark-annotation').remove();
-        
+
 		if (buttonPressed) {
 			var delay = 1300;
 		} else {
 			var delay = 0;
 		}
-		
+
 		var annotation = d3.select('.joyplot-container')
 						   .append('div')
 							.attr('class', 'peak-annotation')
 							.style('position', 'absolute')
 							.style('visibility', 'hidden')
 							.text('Index of 100');
-		
-		//use this to determine triangle location. since month 7 is starting point 
+
+		//use this to determine triangle location. since month 7 is starting point
 		//for when tweet is on left side, offset that to be month 1
 		var peakMonth = month_numerical(peakTime);
 		var percentMonth = (peakMonth - 1) / 11;
-		
+
 		var annotationWidth = parseInt(d3.select('.peak-annotation').style('width'), 10);
 		var annotationHeight = parseInt(d3.select('.peak-annotation').style('height'), 10);
-		
+
 		var triangleWidth = 14;
 		var offsetAnnotationWidth = annotationWidth - (triangleWidth * 2);
 		var triangleOffset = triangleWidth + (offsetAnnotationWidth * percentMonth);
-		
+
 		annotationWidth = parseInt(d3.select('.peak-annotation').style('width'), 10);
-		
+
 		annotation.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 					annotationHeight - 10 + 'px')
 				  .style('left', xScale(peakTime) - triangleOffset - 7 + 'px');
-		
+
 		d3.select('.peak-annotation')
 		  .append('div')
 		  .attr('class', 'annotation-triangle')
 		  .style('visibility', 'hidden')
 		  .style('left', triangleOffset + 'px')
 		  .style('top', annotationHeight - 6 + 'px');
-		
+
 		console.log(name);
-		
+
 		if (benchmarked && name !== 'UnitedAirlines') {
 			var benchmarkValues = getValues(23);
 			d3.select('.joyplot-container')
@@ -511,19 +515,19 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 				.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(benchmarkValues.peakMentions) + 'px')
 				.style('left', xScale(benchmarkValues.peakTime) + 'px')
 				.style('visibility', 'hidden');
-			
+
 		}
-		
+
 		d3.select('.peak-annotation')
 		  .transition()
 		  .delay(delay)
 		  .style('visibility', 'visible');
-		
+
 		d3.select('.annotation-triangle')
 		  .transition()
 		  .delay(delay)
 		  .style('visibility', 'visible');
-		
+
 		d3.select('.benchmark-annotation')
 		  .transition()
 		  .delay(delay)
@@ -547,12 +551,12 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 	        }).then(function(r) {
 				d3.select(r).style('min-width', '0px');
 				d3.select(r).style('max-width', '1000px');
-				
+
 				var windowWidth = window.innerWidth;
 				var tweetWidth;
-			
+
 			});
-				
+
 
 		}
 	}
@@ -569,59 +573,59 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 									return cached_tweet.node();
 							   })
 							  .attr('class', 'current-tweet');
-		
+
 		var thisTweet = d3.select("#twitter-widget-" + index);
-		
+
 		var windowWidth = window.innerWidth;
 		var tweetWidth;
-		
+
 		if (windowWidth > 763) {
 			tweetWidth = windowWidth * .3;
 		} else {
 			tweetWidth = windowWidth * .4;
 		}
-		
+
 		thisTweet.style('width', tweetWidth + 'px');
-		
+
 		/*
 		tweetWidth = parseInt(thisTweet.style('width'), 10);
 		tweetHeight = parseInt(thisTweet.style('height'), 10);
 		*/
-		
-		
+
+
 		//var newTweetWidth = sizeTweet(tweetWidth, tweetHeight);
-		
+
 		//thisTweet.style('width', newTweetWidth + 'px');
 
 	}
 
 	function sizeTweet(w, h) {
-		
+
 		var windowWidth = window.innerWidth;
 
 		if (windowWidth > 763) {
-			
+
 		} else {
-			
+
 		}
-		
+
 		/*var ratio = h / w;
-		
+
 		var screenHeight = window.innerHeight;
 		var screenWidth = window.innerWidth;
-		
+
 		var targetWidth = screenWidth * .27;
 		var maxHeight = screenHeight * .4
-		
+
 		if (targetWidth * ratio > maxHeight) {
 			return screenWidth * .2;
 		} else {
 			return targetWidth;
 		}
 		*/
-		
+
 		//console.log(ratio + ',' + screenHeight + ',' + screenWidth + ',' + maxTweetHeight + ',' + maxTweetWidth + ',' + tweetWidth);
-		
+
 		/*
 		var screenWidth = screen.width;
 		var windowWidth = window.innerWidth;
@@ -635,7 +639,7 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			}
 		}
 		*/
-		
+
 	}
 
 
@@ -675,18 +679,18 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		nameScale.domain(data.map(function (d) { return d.key; }));
 
 		d3.selectAll('.benchmark-line').remove();
-		
+
 		var values = getValues(current_index);
 		var className = 'name--' + values.nameNoSpace;
 		var thisJoyplot = d3.select('.' + className);
-		
+
 		if (benchmarked) {
 			thisJoyplot.append('path')
 				 .attr('class', 'benchmark-line')
 			     .datum(data[23].values)
 			     .attr('d', line);
 		}
-		
+
 		gName.select('path.area')
 			.datum(function (d) { return d.values; })
 			.transition()
@@ -698,15 +702,15 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 			.transition()
 			.duration(1200)
 			.attr('d', line);
-		
+
 		var width = parseInt(d3.select('.joyplot-container').style('width'), 10);
-		
+
         var svg = d3.select('.joyplot-container')
                 .select('svg')
                 .attr('viewBox', '0, 0, ' + width + ", " + svg_container_height)
                 .attr('width', '100%');
 	}
-    
+
     function getValues(index) {
 		var name, nameNoSpace, peakTime, peakMentions;
 
@@ -715,15 +719,15 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 
 		peakTime = data[index].peakTime;
 		peakMentions = data[index].peakMentions;
-        
+
         var values = {name: name, nameNoSpace: nameNoSpace, peakTime: peakTime, peakMentions: peakMentions};
-        
+
         return values;
-        
+
     }
-	
+
 	function setMemeLocationSize(peakTime) {
-		
+
 		var peakMonth = month_numerical(peakTime);
 		var firstHalf = true;
 		if (peakMonth > 6) {
@@ -731,13 +735,13 @@ d3.csv('meme_interest_data_stacked.csv', rowConverter, function (error, dataset)
 		}
 		var windowWidth = window.innerWidth;
 		var memeNameContainer = graphic.select('.meme-name-container');
-		
+
 		var memeNameHeight = parseInt(graphic.select('.meme-name-container').style('height'), 10);
 		var memeNameOffset = windowHeight * .13;
 		var tweetHeight = memeNameHeight + memeNameOffset;
-		
+
 		var tweetContainer = graphic.select('#tweet');
-		
+
 		if (windowWidth > 763) {
 			if (firstHalf) {
 				tweetContainer.style('left', '55%');
