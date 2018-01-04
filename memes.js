@@ -151,6 +151,7 @@ d3.csv('Data/meme_interest_data_stacked.csv', rowConverter, function (error, dat
 
 	// sort memes by peak time
 	data.sort(function (a, b) { return a.peakTime - b.peakTime; });
+	console.log(data);
 
 	// run getTweetId function on our dataset
 	findTweetIds(data);
@@ -346,7 +347,7 @@ d3.csv('Data/meme_interest_data_stacked.csv', rowConverter, function (error, dat
 		if (benchmarked) {
 			thisJoyplot.append('path')
 				 .attr('class', 'benchmark-line')
-			     .datum(data[23].values)
+			     .datum(data[24].values)
 			     .attr('d', line);
 		}
 
@@ -505,8 +506,8 @@ d3.csv('Data/meme_interest_data_stacked.csv', rowConverter, function (error, dat
 
 		console.log(name);
 
-		if (benchmarked && name !== 'UnitedAirlines') {
-			var benchmarkValues = getValues(23);
+		if (benchmarked && name !== 'UnitedAirlinesPassengerRemoval') {
+			var benchmarkValues = getValues(24);
 			d3.select('.joyplot-container')
 			  .append('div')
 				.attr('class', 'benchmark-annotation')
@@ -687,7 +688,7 @@ d3.csv('Data/meme_interest_data_stacked.csv', rowConverter, function (error, dat
 		if (benchmarked) {
 			thisJoyplot.append('path')
 				 .attr('class', 'benchmark-line')
-			     .datum(data[23].values)
+			     .datum(data[24].values)
 			     .attr('d', line);
 		}
 
