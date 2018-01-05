@@ -99,10 +99,10 @@ var rowConverter = function (d) {
 };
 
 // import data from csv
-d3.csv('Data/meme_tweets.csv', function (error, first_dataset) {
+d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', function (error, first_dataset) {
 
 	// import data from csv
-	d3.csv('Data/meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
+	d3.csv('https://the-dataface.github.io/data/memes-2017/meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
 		if (error) { throw error; }
 
 		var benchmarked = false;
