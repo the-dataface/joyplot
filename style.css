@@ -201,32 +201,47 @@ h1 {
 	margin-top:20px;
 	text-align: center;
 	position:relative;
-	display:block;
 }
 
 .change-data-button {
-	font-weight:200;
+	font-weight: 500;
 	cursor:pointer;
 	padding: 0px 8px;
-	border: 1px solid #aaa;
 	font-size: 14px;
-	border-radius: 2px;
-	display:inline-block;
-	width:170px;
+	width:150px;
+	margin:0;
 	text-align:center;
-	background-color:white;
+	display:inline-block;
+    height: 23px;
+    border: 1px solid #cfcdd8;
+    color: #cfcdd8;
+    background: #0a061b;
+	margin-left:-3px;
+	line-height:23px;
+}
+
+.left-button {
+	border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.right-button {
+	border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .change-data-button-selected {
-	background-color: #F5F5F5;
-	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+	font-weight: 500;
+    background-color: #cfcdd8;
+    color: #0a061b;
 }
 
 @media only screen and (max-width: 763px) {
 	.change-data-button {
 		font-size: 12px;
 		display:inline-block;
-		width:130px;
+		width:120px;
+		height:18px;
 	}
 }
 
