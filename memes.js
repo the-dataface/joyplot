@@ -18,7 +18,7 @@ if (screenWidth < 763 || windowWidth < 763) {
 } else if (screenWidth < 1000 || windowWidth < 1000) {
 	var svg_container_height = 6000;
 } else {
-	var svg_container_height = 9000;
+	var svg_container_height = 8000;
 }
 
 var svg_height = svg_container_height - margin.top - margin.bottom;
@@ -415,7 +415,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			if (screenWidth < 763 || windowWidth < 763) {
 				offsetPct = .9;
 			} else {
-				offsetPct = .7;
+				offsetPct = .8;
 			}
 			scroller.setup({
 				container: '#scroll',
