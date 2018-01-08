@@ -297,7 +297,7 @@ h1 {
 	.meme-description {
 		max-width:60%;
 		font-size:18px;
-		line-height:24px;
+		line-height:24px!important;
 	}
 }
 
@@ -319,7 +319,7 @@ h1 {
 	.meme-description {
 		max-width:80%;
 		font-size:15px;
-		line-height:20px;
+		line-height:20px!important;
 	}
 }
 
@@ -342,7 +342,7 @@ h1 {
 	.meme-description {
 		max-width:90%;
 		font-size:12px;
-		line-height:16px;
+		line-height:16px!important;
 	}
 }
 
