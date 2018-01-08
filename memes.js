@@ -534,7 +534,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			annotationWidth = parseInt(d3.select('.peak-annotation').style('width'), 10);
 
 			annotation.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 					annotationHeight - 10 + 'px')
-					  .style('left', xScale(peakTime) - triangleOffset + 'px');
+					  .style('left', xScale(peakTime) - triangleOffset - 7 + 'px');
 
 			d3.select('.peak-annotation')
 			  .append('div')
