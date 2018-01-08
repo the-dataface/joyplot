@@ -400,6 +400,9 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			graphic.classed('is-fixed', false);
 			graphic.classed('is-bottom', response.direction === 'down');
 			d3.selectAll('.peak-annotation').remove();
+			
+			d3.selectAll('.benchmark-line').remove();
+			d3.selectAll('.benchmark-annotation').remove();
 		}
 
 		function init () {
