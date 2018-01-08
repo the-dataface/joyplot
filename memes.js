@@ -534,11 +534,16 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			var triangleWidth = 14;
 			var offsetAnnotationWidth = annotationWidth - (triangleWidth * 2);
 			var triangleOffset = triangleWidth + (offsetAnnotationWidth * percentMonth);
+			
+			if (peakMonth == 12) {
+				annotation.style('width', '90px');
+			}
 
 			annotationWidth = parseInt(d3.select('.peak-annotation').style('width'), 10);
 
 			annotation.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 					annotationHeight - 10 + 'px')
 					  .style('left', xScale(peakTime) - triangleOffset - 7 + 'px');
+			
 
 			d3.select('.peak-annotation')
 			  .append('div')
