@@ -282,7 +282,7 @@ h1 {
 
 @media only screen and (min-width : 1000px) {
 	.meme-name-container {
-		top:10%;
+		margin-top:15px;
 	}
 	.meme-name {
 		font-size: 35px;
@@ -303,7 +303,7 @@ h1 {
 
 @media only screen and (min-width : 764px) and (max-width: 999px) {
 	.meme-name-container {
-		top:10%;
+		margin-top:15px;
 	}
 	.meme-name {
 		font-size: 30px;
@@ -324,7 +324,7 @@ h1 {
 
 @media only screen and (max-width: 763px) {
 	.meme-name-container {
-		top:4%;
+		margin-top:5px;
 	}
 
 	.meme-name {
