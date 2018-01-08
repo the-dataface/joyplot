@@ -477,11 +477,11 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			});
 
 		d3.select('#example-link')
-			.on('mouseover', function () {
+			.on('mouseenter', function () {
 				var thisTweet = d3.select('#tweet');
 				thisTweet.style('display', 'block');
 			})
-			.on('mouseout', function() {
+			.on('mouseleave', function() {
 				if (!clicked) {
 					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'none');
