@@ -293,7 +293,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 		createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
 		  
-		changeData(benchmarked);
+		//changeData(benchmarked);
 
 		scroller.resize();
 	  }
@@ -729,7 +729,6 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					 .attr('d', line);
 			}
 			
-
 			gName.select('path.area')
 				.datum(function (d) { return d.values; })
 				.transition()
