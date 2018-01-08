@@ -363,9 +363,17 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			d3.selectAll('.benchmark-line').remove();
 
 			if (benchmarked) {
+				var cashKey;
+				
+				for (i in data) {
+					if (data[i].key == 'Cash Me Outside') {
+						cashKey = i;
+						break;
+					}
+				}
 				thisJoyplot.append('path')
 					 .attr('class', 'benchmark-line')
-					 .datum(data[3].values)
+					 .datum(data[cashKey].values)
 					 .attr('d', line);
 			}
 
@@ -752,9 +760,18 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			var thisJoyplot = d3.select('.' + className);
 
 			if (benchmarked) {
+				var cashKey;
+				
+				for (i in data) {
+					if (data[i].key == 'Cash Me Outside') {
+						cashKey = i;
+						break;
+					}
+				}
+	
 				thisJoyplot.append('path')
 					 .attr('class', 'benchmark-line')
-					 .datum(data[3].values)
+					 .datum(data[cashKey].values)
 					 .attr('d', line);
 			}
 			
