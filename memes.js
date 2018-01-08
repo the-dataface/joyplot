@@ -563,7 +563,17 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			  .style('top', annotationHeight - 6 + 'px');
 
 			if (benchmarked && name !== 'CashMeOutside') {
-				var benchmarkValues = getValues(3);
+				var cashKey;
+				
+				for (i in data) {
+					console.log(data[i]);
+					if (data[i].key == 'Cash Me Outside') {
+						cashKey = i;
+						break;
+					}
+				}
+				var benchmarkValues = getValues(cashKey);
+				
 				d3.select('.joyplot-container')
 				  .append('div')
 					.attr('class', 'benchmark-annotation')
@@ -811,13 +821,11 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					rank = d[i].rank;
 					peakMentions = d[i].peak_index;
 					peakTime = parseTime(d[i].peak_week);
-					
-					console.log(peakTime);
 				
 					month = month_full_text(peakTime);
 				
 					day = day_numerical(peakTime);
-					console.log(day);
+
 					if (day < 10) {
 						timeOfMonth = 'early ';
 					} else if (day < 20) {
