@@ -541,18 +541,17 @@ svg {
 	width:100%;
 	color:white;
 	border-collapse: collapse; 
-	line-height: null!important;
 }
 
 .meme-table td {
-	font-size: 1.2rem;
+	font-size:20px;
     padding-top: 0;
     padding-bottom: 0;
 }
 
 .meme-header {
 	text-align: left;
-	font-size: 1.1rem;
+	font-size: 18px;
 	font-weight: 700;
 	letter-spacing: 0;
 	line-height: 1.5rem;
@@ -561,7 +560,7 @@ svg {
 .index-header {
 	width:45%;
 	text-align: left;
-	font-size: 1.1rem;
+	font-size: 18px;
 	font-weight: 700;
 	letter-spacing: 0;
 	line-height: 1.5rem;
@@ -586,7 +585,7 @@ svg {
 
 .table-meme-date {
 	font-weight: 300;
-	font-size:1.1rem;
+	font-size:18px;
 }
 
 .table-index {
@@ -601,7 +600,7 @@ svg {
 
 .table-bar span {
 	color: #fff;
-    font-size: .8rem;
+    font-size: 15px;
     line-height: 2!important;
     font-weight: 700;
 }
@@ -618,20 +617,20 @@ svg {
 		width:80%;
 	}
 	.table-bar span {
-		font-size: .7rem;
+		font-size: 16px;
 	}
 	.meme-table td {
-		font-size: 1rem;
+		font-size: 17px;
 	}
 	.table-meme-date {
-		font-size:.9rem;
+		font-size:16px;
 	}
 	.meme-header {
-		font-size: .9rem;
+		font-size: 16px;
 	}
 
 	.index-header {
-		font-size: .9rem;
+		font-size: 16px;
 	}
 }
 
@@ -640,19 +639,19 @@ svg {
 		width:95%;
 	}
 	.table-bar span {
-		font-size: .6rem;
+		font-size: 13px;
 	}
 	.meme-table td {
-		font-size: .9rem;
+		font-size: 14px;
 	}
 	.table-meme-date {
-		font-size:.8rem;
+		font-size:13px;
 	}
 	.meme-header {
-		font-size: .8rem;
+		font-size: 13px;
 	}
 
 	.index-header {
-		font-size: .8rem;
+		font-size: 13px;
 	}
 }
