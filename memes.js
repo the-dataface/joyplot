@@ -305,6 +305,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			// remove previous annotation and previous tweet
 			
 			d3.select('#tweet').style('display', 'none');
+			clicked = false;
 			
 			if (started) {
 				d3.selectAll('.annotation-group').remove();
