@@ -643,11 +643,11 @@ svg {
 		font-size: 12px;
 	}
 	.meme-table td {
-		font-size: 13px;
+		font-size: 14px;
 		line-height:17px!important;
 	}
 	.table-meme-date {
-		font-size:12px;
+		display:none;
 	}
 	.meme-header {
 		font-size: 12px;
