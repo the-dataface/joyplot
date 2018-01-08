@@ -491,6 +491,16 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					thisTweet.style('display', 'none');
 				}
 			})
+			.on('touchstart', function () {
+				var thisTweet = d3.select('#tweet');
+				thisTweet.style('display', 'block');
+			})
+			.on('touchend', function() {
+				if (!clicked) {
+					var thisTweet = d3.select('#tweet');
+					thisTweet.style('display', 'none');
+				}
+			})
 			.on('click', function() {
 				if (!clicked) {
 					var thisTweet = d3.select('#tweet');
