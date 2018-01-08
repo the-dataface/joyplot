@@ -324,7 +324,7 @@ h1 {
 	}
 	.meme-description {
 		max-width:80%;
-		font-size:15px;
+		font-size:17px;
 		line-height:20px!important;
 	}
 }
@@ -347,7 +347,7 @@ h1 {
 	}
 	.meme-description {
 		max-width:90%;
-		font-size:12px;
+		font-size:13px;
 		line-height:16px!important;
 	}
 }
@@ -541,6 +541,7 @@ svg {
 	width:100%;
 	color:white;
 	border-collapse: collapse; 
+	line-height: null!important;
 }
 
 .meme-table td {
@@ -601,7 +602,7 @@ svg {
 .table-bar span {
 	color: #fff;
     font-size: .8rem;
-    line-height: 2;
+    line-height: 2!important;
     font-weight: 700;
 }
 
