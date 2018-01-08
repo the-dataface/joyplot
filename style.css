@@ -533,7 +533,7 @@ svg {
 }
 
 .table-container {
-	width:50%;
+	width:70%;
 	margin:0 auto;
 }
 
@@ -544,14 +544,14 @@ svg {
 }
 
 .meme-table td {
-	font-size: .9rem;
+	font-size: 1.2rem;
     padding-top: 0;
     padding-bottom: 0;
 }
 
 .meme-header {
 	text-align: left;
-	font-size: .8rem;
+	font-size: 1.1rem;
 	font-weight: 700;
 	letter-spacing: 0;
 	line-height: 1.5rem;
@@ -560,7 +560,7 @@ svg {
 .index-header {
 	width:45%;
 	text-align: left;
-	font-size: .8rem;
+	font-size: 1.1rem;
 	font-weight: 700;
 	letter-spacing: 0;
 	line-height: 1.5rem;
@@ -585,6 +585,7 @@ svg {
 
 .table-meme-date {
 	font-weight: 300;
+	font-size:1.1rem;
 }
 
 .table-index {
@@ -594,11 +595,63 @@ svg {
 .table-bar {
 	background-color:red;
 	height:1.5rem;
+	padding-left:5px;
 }
 
 .table-bar span {
 	color: #fff;
-    font-size: .7rem;
+    font-size: .8rem;
     line-height: 2;
-    font-weight: 500;
+    font-weight: 700;
+}
+
+@media only screen and (min-width : 1000px) {
+	.table-container {
+		width:70%;
+	}
+
+}
+
+@media only screen and (min-width : 764px) and (max-width: 999px) {
+	.table-container {
+		width:80%;
+	}
+	.table-bar span {
+		font-size: .7rem;
+	}
+	.meme-table td {
+		font-size: 1rem;
+	}
+	.table-meme-date {
+		font-size:.9rem;
+	}
+	.meme-header {
+		font-size: .9rem;
+	}
+
+	.index-header {
+		font-size: .9rem;
+	}
+}
+
+@media only screen and (max-width: 763px) {
+	.table-container {
+		width:95%;
+	}
+	.table-bar span {
+		font-size: .6rem;
+	}
+	.meme-table td {
+		font-size: .9rem;
+	}
+	.table-meme-date {
+		font-size:.8rem;
+	}
+	.meme-header {
+		font-size: .8rem;
+	}
+
+	.index-header {
+		font-size: .8rem;
+	}
 }
