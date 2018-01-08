@@ -175,6 +175,8 @@ h1 {
 	color:white;
 	text-decoration:underline;
 	text-decoration-color:grey;
+	background-color:black;
+	border-radius:3px;
 
 }
 
@@ -251,6 +253,9 @@ h1 {
 	padding:10px;
 	text-align:center;
 	width:100%;
+	background-color:black;
+	padding:20px;
+	border-radius:3px;
 
 }
 
@@ -298,6 +303,7 @@ h1 {
 		max-width:60%;
 		font-size:18px;
 		line-height:24px!important;
+
 	}
 }
 
