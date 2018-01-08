@@ -180,7 +180,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		// set step container to be height of svg and start at first joyplot
 		d3.select('.scroll__text')
 			.style('height', function () {
-				return svg_container_height - margin.bottom + 'px';
+				return svg_container_height - margin.bottom - margin.top + 'px';
 		})
 			.style('top', function () {
 				return margin.top - nameScale.bandwidth() + 'px';
