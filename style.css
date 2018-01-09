@@ -270,7 +270,6 @@ h1 {
 
 .meme-name-container {
 	font-family:'Mada';
-	padding:10px;
 	text-align:center;
 	width:100%;
 	background-color:black;
@@ -657,11 +656,11 @@ svg {
 		display:none;
 	}
 	.meme-header {
-		font-size: 12px;
+		font-size: 13px;
 	}
 
 	.index-header {
-		font-size: 12px;
+		font-size: 13px;
 	}
 	.table-index {
 		line-height:30px;

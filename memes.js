@@ -657,49 +657,6 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 		}
 
-		function sizeTweet(w, h) {
-
-			var windowWidth = window.innerWidth;
-
-			if (windowWidth > 763) {
-
-			} else {
-
-			}
-
-			/*var ratio = h / w;
-
-			var screenHeight = window.innerHeight;
-			var screenWidth = window.innerWidth;
-
-			var targetWidth = screenWidth * .27;
-			var maxHeight = screenHeight * .4
-
-			if (targetWidth * ratio > maxHeight) {
-				return screenWidth * .2;
-			} else {
-				return targetWidth;
-			}
-			*/
-
-			//console.log(ratio + ',' + screenHeight + ',' + screenWidth + ',' + maxTweetHeight + ',' + maxTweetWidth + ',' + tweetWidth);
-
-			/*
-			var screenWidth = screen.width;
-			var windowWidth = window.innerWidth;
-			if (screenWidth < 763 || windowWidth < 763) {
-				tweet.style('width', twitterWidgetWidth * smallScreenHeightRatio +  "px");
-			} else {
-				if (twitterWidgetWidth * bigScreenHeightRatio < windowWidth * .3) {
-					tweet.style('width', twitterWidgetWidth * bigScreenHeightRatio +  "px");
-				} else {
-					tweet.style('width', windowWidth * .3 + "px");
-				}
-			}
-			*/
-
-		}
-
 
 		// update data from benchmarked to non-benchmarked
 		function changeData (benchmarked) {
