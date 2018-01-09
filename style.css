@@ -194,7 +194,7 @@ h1 {
 @media only screen and (max-width: 763px) {
 	.link {
 		font-size: 13px;
-	} 
+	}
 	#link-container-above {
 		display:block;
 	}
@@ -206,7 +206,7 @@ h1 {
 @media only screen and (min-width: 764px) {
 	.link {
 		font-size: 16px;
-	} 
+	}
 	#link-container-above {
 		display:none;
 	}
@@ -308,7 +308,7 @@ h1 {
 
 @media only screen and (min-width : 1000px) {
 	.meme-name-container {
-		
+
 	}
 	.meme-name {
 		font-size: 35px;
@@ -391,7 +391,7 @@ h1 {
 }
 
 
-.tweet {
+#tweet {
 	z-index:999;
 	display:none;
 	position:absolute;
@@ -552,13 +552,13 @@ svg {
 .meme-table {
 	width:100%;
 	color:white;
-	border-collapse: collapse; 
+	border-collapse: collapse;
 }
 
 .meme-table td {
 	font-size:18px;
 	padding-right:5px;
-	
+
 }
 
 .meme-header {

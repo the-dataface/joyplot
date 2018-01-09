@@ -134,7 +134,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 				tweet_ids.push(tweet_id);
 			}
 		}
-		
+
 		function mergeData(set1, set2) {
 			for (var i in set1) {
 				for (var j in set2) {
@@ -142,15 +142,15 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 						set2[j].description = set1[i].meme_description;
 						set2[j].link = set1[i].know_your_meme_link;
 						break;
-					} 
+					}
 				}
 			}
 		}
-		
+
 
 		// run findPeaks function on our dataset
 		findPeaks(data);
-		
+
 		mergeData(first_dataset, data);
 
 		// sort memes by peak time
@@ -252,8 +252,8 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		var leftMargin;
 		var axisTopMargin;
 		var svgContainerHeight;
-		  
-		var tweet = d3.select('.tweet');
+
+		var tweet = d3.select('#tweet');
 		if (windowWidth > 763) {
 			width = windowWidth * .7;
 			leftMargin = windowWidth * .15;
@@ -268,7 +268,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			//axisTopMargin = windowHeight * .6;
 			axisTopMargin = 20;
 			svgContainerHeight = 4000;
-			d3.select('#link-container-below').append(function () {
+			d3.select('#link-container-above').append(function () {
 				return tweet.node();
 			});
 		}
@@ -297,7 +297,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		var values = getValues(current_index);
 
 		createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
-		  
+
 		changeData(benchmarked);
 
 		scroller.resize();
@@ -308,23 +308,14 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		function handleStepEnter (response) {
 			// response = { element, direction, index }
 			// remove previous annotation and previous tweet
-			
-			d3.selectAll('.tweet').style('display', 'none');
+
+			d3.select('#tweet').style('display', 'none');
+			d3.select('#current-tweet').remove();
 			clicked = false;
 			d3.selectAll('.example-text').text('Show An Example');
-			
-			console.log(d3.select('.current-tweet'));
-			
-		
+
 			if (started) {
 				d3.selectAll('.annotation-group').remove();
-
-				previous_tweet = d3.select('.current-tweet').classed('current-tweet', false);
-
-				d3.select('#tweet-storage')
-					.append(function() {
-						return previous_tweet.node();
-					});
 			} else {
 				started = true;
 			}
@@ -347,10 +338,10 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			// change to current meme name
 			graphic.select('.meme-name')
 				.text(values.name);
-			
+
 			graphic.select('.meme-description')
 				.text(values.description);
-			
+
 			graphic.selectAll('.website-link')
 				.on('click', function() {
 					window.open(values.link);
@@ -373,7 +364,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 			if (benchmarked) {
 				var cashKey;
-				
+
 				for (i in data) {
 					if (data[i].key == 'Cash Me Outside') {
 						cashKey = i;
@@ -390,7 +381,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			createAnnotations(index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
 
 			// create tweets
-			grabTweet(index);
+			createTweet(index);
 			// if peak time is past halfway through year, move meme image/title. need to update to make sense for all screen sizes
 			setMemeLocationSize(values.peakTime);
 		}
@@ -417,7 +408,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			graphic.classed('is-fixed', false);
 			graphic.classed('is-bottom', response.direction === 'down');
 			d3.selectAll('.peak-annotation').remove();
-			
+
 			d3.selectAll('.benchmark-line').remove();
 			d3.selectAll('.benchmark-annotation').remove();
 		}
@@ -475,9 +466,9 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		d3.selectAll('.change-data-button')
 			.on('click', function () {
 				var thisButton = d3.select(this);
-				
+
 				if (!thisButton.classed('change-data-button-selected')) {
-					
+
 					d3.selectAll('.change-data-button').classed('change-data-button-selected', false)
 
 					thisButton.classed('change-data-button-selected', true);
@@ -494,33 +485,31 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 					createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, true);
 				}
-			
+
 			});
 
 		d3.selectAll('.example-link')
 			.on('mouseover', function () {
-				var thisTweet = d3.selectAll('.tweet');
+				var thisTweet = d3.select('#tweet');
 				thisTweet.style('display', 'block');
 			})
 			.on('mouseout', function() {
 				if (!clicked) {
-					var thisTweet = d3.selectAll('.tweet');
+					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'none');
 				}
 			})
 			.on('click', function() {
 				if (!clicked) {
-					var thisTweet = d3.selectAll('.tweet');
+					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'block');
 					clicked = true;
 					d3.selectAll('.example-text').text('Hide Example');
 				} else {
-					var thisTweet = d3.selectAll('.tweet');
+					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'none');
 					clicked = false;
 					d3.selectAll('.example-text').text('Show An Example');
-					
-					var el = document.getElementsByClassName('current-tweet').getElementsByClassName('play-button');
 				}
 			});
 
@@ -555,7 +544,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			var triangleWidth = 14;
 			var offsetAnnotationWidth = annotationWidth - (triangleWidth * 2);
 			var triangleOffset = triangleWidth + (offsetAnnotationWidth * percentMonth);
-			
+
 			if (peakMonth == 12) {
 				annotation.style('width', '90px');
 			}
@@ -564,7 +553,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 			annotation.style('top', margin.top + (nameScale.bandwidth() * (index)) + yScale(peakMentions) - 					annotationHeight - 10 + 'px')
 					  .style('left', xScale(peakTime) - triangleOffset - 7 + 'px');
-			
+
 
 			d3.select('.peak-annotation')
 			  .append('div')
@@ -575,7 +564,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 			if (benchmarked && name !== 'CashMeOutside') {
 				var cashKey;
-				
+
 				for (i in data) {
 					if (data[i].key == 'Cash Me Outside') {
 						cashKey = i;
@@ -583,7 +572,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					}
 				}
 				var benchmarkValues = getValues(cashKey);
-				
+
 				d3.select('.joyplot-container')
 				  .append('div')
 					.attr('class', 'benchmark-annotation')
@@ -611,56 +600,28 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			  .style('visibility', 'visible');
 		}
 
-		function createAllTweets() {
-			var tweetNumber = tweet_ids.length;
-			//var percentageIncrement = 100 / tweetNumber;
-
-			for (i in tweet_ids) {
-				tweet_storage = d3.select('#tweet-storage');
-				var id = 'tweet-' + i;
-				tweet_storage.append('div').attr('id', id);
+		function createTweet(i) {
+				tweetContainer = d3.select('#tweet');
+				var id = 'current-tweet';
+				tweetContainer.append('div').attr('id', id);
 				twttr.widgets.createTweet(
 				tweet_ids[i], document.getElementById(id), {
 					conversation : 'none',    // or all
 					cards        : 'visible',  // or visible
 					linkColor    : '#cc0000', // default is blue
 					theme        : 'light'    // or dark
-				}).then(function(r) {
-					d3.select(r).style('min-width', '0px');
-					d3.select(r).style('max-width', '1000px');
-
+				}).then(function(t) {
 					var windowWidth = window.innerWidth;
-					var tweetWidth;
+					var tweetWidth = windowWidth * .3;
+
+					d3.select(t).style('min-width', '0px');
+					d3.select(t).style('max-width', '1000px');
+					d3.select(t).style('width', tweetWidth + 'px');
 
 				});
 
 
-			}
 		}
-
-		createAllTweets();
-
-		function grabTweet(index) {
-			var id = '#tweet-' + index;
-
-			var cached_tweet = d3.select(id);
-
-			var visible_tweet = d3.select('.tweet')
-								  .append(function() {
-										return cached_tweet.node();
-								   })
-								  .attr('class', 'current-tweet');
-
-			var thisTweet = d3.select("#twitter-widget-" + index);
-
-			var windowWidth = window.innerWidth;
-			var tweetWidth = windowWidth * .3;
-			
-
-			thisTweet.style('width', tweetWidth + 'px');
-
-		}
-
 
 		// update data from benchmarked to non-benchmarked
 		function changeData (benchmarked) {
@@ -705,20 +666,20 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 			if (benchmarked) {
 				var cashKey;
-				
+
 				for (i in data) {
 					if (data[i].key == 'Cash Me Outside') {
 						cashKey = i;
 						break;
 					}
 				}
-	
+
 				thisJoyplot.append('path')
 					 .attr('class', 'benchmark-line')
 					 .datum(data[cashKey].values)
 					 .attr('d', line);
 			}
-			
+
 			gName.select('path.area')
 				.datum(function (d) { return d.values; })
 				.transition()
@@ -747,7 +708,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 			peakTime = data[index].peakTime;
 			peakMentions = data[index].peakMentions;
-			
+
 			description = data[index].description;
 			link = data[index].link;
 
@@ -772,7 +733,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			var tweetHeight = memeNameHeight + memeNameOffset;
 
 		}
-		
+
 		var rankedData = [];
 		function getTableArray(d) {
 			for (i in d) {
@@ -782,9 +743,9 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					rank = d[i].rank;
 					peakMentions = d[i].peak_index;
 					peakTime = parseTime(d[i].peak_week);
-				
+
 					month = month_full_text(peakTime);
-				
+
 					day = day_numerical(peakTime);
 
 					if (day < 10) {
@@ -799,25 +760,25 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					rankedData.push(thisMeme);
 					}
 			}
-			
+
 		}
 
 		getTableArray(first_dataset);
 		rankedData.sort(function (a, b) { return a.rank - b.rank; });
-		
+
 		for (i in rankedData) {
 			var memeName = rankedData[i].name;
 			var memeRank = rankedData[i].rank;
 			var memeMentions = rankedData[i].peakMentions;
 			var memeMonth = rankedData[i].month;
 			var memeTOM = rankedData[i].timeOfMonth;
-				
+
 			var tr = d3.select('.meme-table')
 			  			.select('.table-body')
 			  			.append('tr');
-			
+
 			var rank = tr.append('td').attr('class', 'table-rank').text(memeRank +  '.');
-			
+
 			var meme = tr.append('td')
 						 .append('span')
 							.attr('class', 'table-meme-name')
@@ -825,7 +786,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 						 .append('span')
 							.attr('class', 'table-meme-date')
 							.text('peaked ' + memeTOM + memeMonth);
-			
+
 			var searchIndex = tr.append('td')
 									.attr('class', 'table-index')
 								.append('div')
