@@ -392,6 +392,8 @@ h1 {
     -o-transform: translate(-50%, 0%);
     -ms-transform: translate(-50%, 0%);
     transform: translate(-50%, 0%);
+	left:0;
+	top:0;
 }
 
 
