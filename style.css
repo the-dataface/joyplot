@@ -163,18 +163,13 @@ h1 {
 	margin-top:5px;
 	position:relative;
 	text-align:center;
-	display:block;
 	z-index:10;
 }
 
-#example-link {
-	z-index:11;
-}
 
 .link {
 	font-weight:500;
 	cursor:pointer;
-	font-size: 16px;
 	display:inline-block;
 	width:130px;
 	color:white;
@@ -185,21 +180,41 @@ h1 {
 
 }
 
-#website-link {
+.website-link {
 	text-align:right;
 	padding-right:5px;
 }
 
-#example-link {
+.example-link {
 	text-align:left;
 	padding-left:5px;
+	z-index:11;
 }
 
 @media only screen and (max-width: 763px) {
 	.link {
 		font-size: 13px;
+	} 
+	#link-container-above {
+		display:block;
+	}
+	#link-container-below {
+		display:none;
 	}
 }
+
+@media only screen and (min-width: 764px) {
+	.link {
+		font-size: 16px;
+	} 
+	#link-container-above {
+		display:none;
+	}
+	#link-container-below {
+		display:block;
+	}
+}
+
 
 
 .change-data-button-container {
