@@ -432,7 +432,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 				graphic: '.scroll__graphic',
 				text: '.scroll__text',
 				step: '.scroll__text .step',
-				debug: true,
+				debug: false,
 				offset: offsetPct
 			})
 				.onStepEnter(handleStepEnter)
