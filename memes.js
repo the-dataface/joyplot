@@ -7,7 +7,7 @@ var side_margin = windowWidth * .1;
 var top_margin = windowHeight * .7;
 
 // set margins - need to make dynamic eventually
-var margin = {left: side_margin, right: side_margin, top: top_margin, bottom: 100};
+var margin = {left: side_margin, right: side_margin, top: top_margin, bottom: 200};
 
 // percent two area charts can overlap
 var overlap = 0.5;
