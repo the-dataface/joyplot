@@ -252,18 +252,25 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		var leftMargin;
 		var axisTopMargin;
 		var svgContainerHeight;
-
+		  
+		var tweet = d3.select('.tweet');
 		if (windowWidth > 763) {
 			width = windowWidth * .7;
 			leftMargin = windowWidth * .15;
 			axisTopMargin = 20;
 			svgContainerHeight = 11000;
+			d3.select('#example-link-below').append(function () {
+				return tweet.node();
+			});
 		} else {
 			width = windowWidth * .9;
 			leftMargin = windowWidth * .05;
 			//axisTopMargin = windowHeight * .6;
 			axisTopMargin = 20;
 			svgContainerHeight = 4000;
+			d3.select('#example-link-above').append(function () {
+				return tweet.node();
+			});
 		}
 
 		d3.select('.joyplot-container')
@@ -302,9 +309,9 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			// response = { element, direction, index }
 			// remove previous annotation and previous tweet
 			
-			d3.select('#tweet').style('display', 'none');
+			d3.selectAll('.tweet').style('display', 'none');
 			clicked = false;
-			d3.select('.example-text').text('Show An Example');
+			d3.selectAll('.example-text').text('Show An Example');
 			
 			if (started) {
 				d3.selectAll('.annotation-group').remove();
@@ -313,7 +320,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 				d3.select('#tweet-storage')
 					.append(function() {
-							return previous_tweet.node();
+						return previous_tweet.node();
 					});
 			} else {
 				started = true;
@@ -489,26 +496,26 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 		d3.selectAll('.example-link')
 			.on('mouseover', function () {
-				var thisTweet = d3.select('#tweet');
+				var thisTweet = d3.selectAll('.tweet');
 				thisTweet.style('display', 'block');
 			})
 			.on('mouseout', function() {
 				if (!clicked) {
-					var thisTweet = d3.select('#tweet');
+					var thisTweet = d3.selectAll('.tweet');
 					thisTweet.style('display', 'none');
 				}
 			})
 			.on('click', function() {
 				if (!clicked) {
-					var thisTweet = d3.select('#tweet');
+					var thisTweet = d3.selectAll('.tweet');
 					thisTweet.style('display', 'block');
 					clicked = true;
-					d3.select('.example-text').text('Hide Example');
+					d3.selectAll('.example-text').text('Hide Example');
 				} else {
-					var thisTweet = d3.select('#tweet');
+					var thisTweet = d3.selectAll('.tweet');
 					thisTweet.style('display', 'none');
 					clicked = false;
-					d3.select('.example-text').text('Show An Example');
+					d3.selectAll('.example-text').text('Show An Example');
 				}
 			});
 
@@ -634,7 +641,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 			var cached_tweet = d3.select(id);
 
-			var visible_tweet = d3.select('#tweet')
+			var visible_tweet = d3.select('.tweet')
 								  .append(function() {
 										return cached_tweet.node();
 								   })
@@ -643,19 +650,10 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			var thisTweet = d3.select("#twitter-widget-" + index);
 
 			var windowWidth = window.innerWidth;
-			var tweetWidth = .4
+			var tweetWidth = windowWidth * .3;
+			
 
 			thisTweet.style('width', tweetWidth + 'px');
-
-			/*
-			tweetWidth = parseInt(thisTweet.style('width'), 10);
-			tweetHeight = parseInt(thisTweet.style('height'), 10);
-			*/
-
-
-			//var newTweetWidth = sizeTweet(tweetWidth, tweetHeight);
-
-			//thisTweet.style('width', newTweetWidth + 'px');
 
 		}
 

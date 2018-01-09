@@ -383,33 +383,15 @@ h1 {
 }
 
 
-#tweet {
-	position:absolute;
+.tweet {
 	z-index:999;
 	display:none;
+	position:absolute;
 	-webkit-transform: translate(-50%, 0%);
     -moz-transform: translate(-50%, 0%);
     -o-transform: translate(-50%, 0%);
     -ms-transform: translate(-50%, 0%);
     transform: translate(-50%, 0%);
-}
-
-@media only screen and (min-width : 1000px) {
-	#tweet {
-		left:55%;
-	}
-}
-
-@media only screen and (min-width : 764px) and (max-width: 999px) {
-	#tweet {
-		left:55%;
-	}
-}
-
-@media only screen and (max-width: 763px) {
-	#tweet {
-		left:55%;
-	}
 }
 
 
