@@ -164,6 +164,11 @@ h1 {
 	position:relative;
 	text-align:center;
 	display:block;
+	z-index:10;
+}
+
+#example-link {
+	z-index:11;
 }
 
 .link {
@@ -177,7 +182,6 @@ h1 {
 	text-decoration-color:grey;
 	background-color:black;
 	border-radius:3px;
-	z-index:9999;
 
 }
 
