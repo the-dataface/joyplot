@@ -259,7 +259,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			leftMargin = windowWidth * .15;
 			axisTopMargin = 20;
 			svgContainerHeight = 11000;
-			d3.select('#example-link-below').append(function () {
+			d3.select('#link-container-below').append(function () {
 				return tweet.node();
 			});
 		} else {
@@ -268,7 +268,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			//axisTopMargin = windowHeight * .6;
 			axisTopMargin = 20;
 			svgContainerHeight = 4000;
-			d3.select('#example-link-above').append(function () {
+			d3.select('#link-container-below').append(function () {
 				return tweet.node();
 			});
 		}
@@ -312,6 +312,13 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			d3.selectAll('.tweet').style('display', 'none');
 			clicked = false;
 			d3.selectAll('.example-text').text('Show An Example');
+			
+			var el = document.getElementsByClassName('play-button pause');
+			console.log(el);
+			for (var i=0; i < el.length; i++) {
+    			el[i].click();
+			}
+		
 			
 			if (started) {
 				d3.selectAll('.annotation-group').remove();
@@ -516,6 +523,12 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					thisTweet.style('display', 'none');
 					clicked = false;
 					d3.selectAll('.example-text').text('Show An Example');
+					
+					var el = document.getElementsByClassName('play-button pause');
+					for (var i=0; i < el.length; i++) {
+						console.log(el);
+						el[i].click();
+					}
 				}
 			});
 
