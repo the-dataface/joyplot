@@ -258,7 +258,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			width = windowWidth * .7;
 			leftMargin = windowWidth * .15;
 			axisTopMargin = 20;
-			svgContainerHeight = 11000;
+			svgContainerHeight = 8000;
 			d3.select('#link-container-below').append(function () {
 				return tweet.node();
 			});
@@ -298,7 +298,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 
 		createAnnotations(current_index, values.nameNoSpace, values.peakMentions, values.peakTime, false);
 		  
-		//changeData(benchmarked);
+		changeData(benchmarked);
 
 		scroller.resize();
 	  }
@@ -313,13 +313,9 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			clicked = false;
 			d3.selectAll('.example-text').text('Show An Example');
 			
-			var el = document.getElementsByClassName('play-button pause');
-			console.log(el);
-			for (var i=0; i < el.length; i++) {
-    			el[i].click();
-			}
-		
+			console.log(d3.select('.current-tweet'));
 			
+		
 			if (started) {
 				d3.selectAll('.annotation-group').remove();
 
@@ -524,11 +520,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					clicked = false;
 					d3.selectAll('.example-text').text('Show An Example');
 					
-					var el = document.getElementsByClassName('play-button pause');
-					for (var i=0; i < el.length; i++) {
-						console.log(el);
-						el[i].click();
-					}
+					var el = document.getElementsByClassName('current-tweet').getElementsByClassName('play-button');
 				}
 			});
 
@@ -585,7 +577,6 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 				var cashKey;
 				
 				for (i in data) {
-					console.log(data[i]);
 					if (data[i].key == 'Cash Me Outside') {
 						cashKey = i;
 						break;
