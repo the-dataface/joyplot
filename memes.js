@@ -7,7 +7,7 @@ var side_margin = windowWidth * .1;
 var top_margin = windowHeight * .7;
 
 // set margins - need to make dynamic eventually
-var margin = {left: side_margin, right: side_margin, top: top_margin, bottom: 400};
+var margin = {left: side_margin, right: side_margin, top: top_margin, bottom: 200};
 
 // percent two area charts can overlap
 var overlap = 0.5;
@@ -28,8 +28,6 @@ var joyplot_width = d3.select('.joyplot-container').node().offsetWidth;
 var svg = d3.select('.joyplot-container')
 			.append('svg')
         		.attr('viewBox', '0, 0, ' + joyplot_width + ", " + svg_container_height)
-				.attr('width', joyplot_width)
-				.attr('height', svg_container_height)
         		.attr("preserveAspectRatio", "none")
 			.append('g')
 			  	.attr('transform', 'translate(0,' + margin.top + ')');
@@ -434,7 +432,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 				graphic: '.scroll__graphic',
 				text: '.scroll__text',
 				step: '.scroll__text .step',
-				debug: false,
+				debug: true,
 				offset: offsetPct
 			})
 				.onStepEnter(handleStepEnter)
