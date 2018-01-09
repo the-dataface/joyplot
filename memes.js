@@ -490,13 +490,16 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			.on('mouseover', function () {
 				var thisTweet = d3.select('#tweet');
 				thisTweet.style('display', 'block');
+				d3.select(this).style('color', 'red');
 			})
 			.on('mouseout', function() {
 				if (!clicked) {
 					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'none');
+					d3.select(this).style('color', 'red');
 				}
 			})
+		/*
 			.on('touchstart', function () {
 				var thisTweet = d3.select('#tweet');
 				thisTweet.style('display', 'block');
@@ -507,15 +510,18 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					thisTweet.style('display', 'none');
 				}
 			})
+		*/
 			.on('click', function() {
 				if (!clicked) {
 					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'block');
 					clicked = true;
+					d3.select(this).style('color', 'red');
 				} else {
 					var thisTweet = d3.select('#tweet');
 					thisTweet.style('display', 'none');
 					clicked = false;
+					d3.select(this).style('color', 'red');
 				}
 			});
 
