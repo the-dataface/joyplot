@@ -614,6 +614,12 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 					var windowWidth = window.innerWidth;
 					var tweetWidth = windowWidth * .3;
 
+					if (windowWidth > 763) {
+						var tweetWidth = windowWidth * .3;
+					} else {
+						var tweetWidth = windowWidth * .6;
+					}
+
 					d3.select(t).style('min-width', '0px');
 					d3.select(t).style('max-width', '1000px');
 					d3.select(t).style('width', tweetWidth + 'px');
