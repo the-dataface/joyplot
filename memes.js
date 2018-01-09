@@ -650,8 +650,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 			var thisTweet = d3.select("#twitter-widget-" + index);
 
 			var windowWidth = window.innerWidth;
-			//var tweetWidth = windowWidth * .3;
-			var tweetWidth = 100;
+			var tweetWidth = windowWidth * .3;
 			
 
 			thisTweet.style('width', tweetWidth + 'px');
