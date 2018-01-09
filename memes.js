@@ -291,7 +291,7 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		graphic.select('svg')
 					.attr('transform', 'translate(0, ' + axisTopMargin + ')')
 			   .select('g')
-					.attr('transform', 'translate(' + leftMargin + ',' + 20 + ')');
+					.attr('transform', 'translate(' + leftMargin + ',' + 10 + ')');
 
 
 		var values = getValues(current_index);
