@@ -1,3 +1,5 @@
+//define asset paths
+var asset_path = setAssetPaths();
 
 // width of window
 var windowWidth = window.innerWidth;
@@ -97,10 +99,10 @@ var rowConverter = function (d) {
 };
 
 // import data from csv
-d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', function (error, first_dataset) {
+d3.csv(asset_path + 'meme_tweets.csv', function (error, first_dataset) {
 
 	// import data from csv
-	d3.csv('https://the-dataface.github.io/data/memes-2017/meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
+	d3.csv(asset_path + 'meme_interest_data_stacked.csv', rowConverter, function (error, dataset) {
 		if (error) { throw error; }
 
 		var benchmarked = false;
@@ -803,3 +805,11 @@ d3.csv('https://the-dataface.github.io/data/memes-2017/meme_tweets.csv', functio
 		}
 	});
 });
+
+function setAssetPaths() {
+	var asset_path = '/data/';
+	if (window.location.hostname == 'the-dataface.github.io') {
+		asset_path = asset_path.substring(1);
+	}
+	return asset_path
+}
